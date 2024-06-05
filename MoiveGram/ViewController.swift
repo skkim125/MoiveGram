@@ -137,35 +137,35 @@ class ViewController: UIViewController {
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(appTitleLabel.snp.bottom).offset(100)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(24)
-            make.height.equalTo(40)
+            make.height.equalTo(appTitleLabel.snp.height)
         }
         
         passwordTextField.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(idTextField.snp.bottom).offset(16)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(24)
-            make.height.equalTo(40)
+            make.height.equalTo(appTitleLabel.snp.height)
         }
         
         nicknameTextField.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(passwordTextField.snp.bottom).offset(16)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(24)
-            make.height.equalTo(40)
+            make.height.equalTo(appTitleLabel.snp.height)
         }
         
         countryTextField.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(nicknameTextField.snp.bottom).offset(16)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(24)
-            make.height.equalTo(40)
+            make.height.equalTo(appTitleLabel.snp.height)
         }
         
         recommandCodeTextField.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(countryTextField.snp.bottom).offset(16)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(24)
-            make.height.equalTo(40)
+            make.height.equalTo(appTitleLabel.snp.height)
         }
         
         joinButton.snp.makeConstraints { make in

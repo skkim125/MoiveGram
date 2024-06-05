@@ -94,10 +94,10 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .gray
+        view.backgroundColor = .black
         navigationItem.title = "Harvey님"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.barTintColor = .white
         
         configureHierarchy()
         configureLayout()
@@ -118,7 +118,6 @@ class HomeViewController: UIViewController {
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
-            make.height.equalTo(480)
         }
         
         nowHotContentsLabel.snp.makeConstraints { make in
@@ -131,6 +130,7 @@ class HomeViewController: UIViewController {
             make.top.equalTo(nowHotContentsLabel.snp.bottom).offset(8) //
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(20) //
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8) //
+            make.height.equalTo(180)
         }
         
         subImageView2.snp.makeConstraints { make in
@@ -139,6 +139,7 @@ class HomeViewController: UIViewController {
             make.leading.equalTo(subImageView1.snp.trailing).offset(8)
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8) //
             make.width.equalTo(subImageView1.snp.width)
+            make.height.equalTo(subImageView1)
         }
         
         subImageView3.snp.makeConstraints { make in
