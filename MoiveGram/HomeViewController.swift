@@ -127,17 +127,17 @@ class HomeViewController: UIViewController {
         }
         
         subImageView1.snp.makeConstraints { make in
-            make.top.equalTo(nowHotContentsLabel.snp.bottom).offset(8) //
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(20) //
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8) //
+            make.top.equalTo(nowHotContentsLabel.snp.bottom).offset(8)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8)
             make.height.equalTo(180)
         }
         
         subImageView2.snp.makeConstraints { make in
             make.centerX.equalTo(mainImageView.snp.centerX)
-            make.top.equalTo(nowHotContentsLabel.snp.bottom).offset(8) //
+            make.top.equalTo(nowHotContentsLabel.snp.bottom).offset(8)
             make.leading.equalTo(subImageView1.snp.trailing).offset(8)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8) //
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8)
             make.width.equalTo(subImageView1.snp.width)
             make.height.equalTo(subImageView1)
         }
@@ -146,7 +146,7 @@ class HomeViewController: UIViewController {
             make.top.equalTo(nowHotContentsLabel.snp.bottom).offset(8)
             make.leading.equalTo(subImageView2.snp.trailing).offset(8)
             make.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8) //
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8)
         }
         
         watchButton.snp.makeConstraints { make in
