@@ -51,6 +51,8 @@ class TrendingTableViewCell: UITableViewCell {
     lazy var rateStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [rateInfoLabel, rateLabel])
         sv.spacing = 0
+        sv.layer.shadowRadius = 10
+        sv.layer.shadowOpacity = 0.8
         
         return sv
     }()
@@ -238,13 +240,31 @@ class TrendingTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setTableViewCellUI(content: Content) {
-        genreLabel.text = "\(content.genre_ids[content.genre_ids.startIndex])"
+    func setTableViewCellUI(content: Content, genres: [Genre], casts: [Credit]) {
+        let contentGenre = content.genre_ids.first!
+        let genreArr = genres.filter { $0.id == contentGenre }
+        var genreFirst = ""
+        var actorsLabelText = ""
+        
+        if let genre = genreArr.first {
+            genreFirst = genre.name
+        }
+        
+        genreLabel.text = "#\(genreFirst)"
         rateLabel.text = String(format: "%.1f", content.vote_average)
         releaseDateLabel.text = content.release_date
         titleLabel.text = content.title
         
-        let url = URL(string: "https://image.tmdb.org/t/p/original" + content.poster_path)!
+        let filterdArr = casts.filter { $0.id == content.id }
+        filterdArr.forEach { credit in
+            for c in credit.cast {
+                actorsLabelText.append(contentsOf: "\(c.name), ")
+            }
+        }
+        
+        actorsLabel.text = actorsLabelText
+        
+        let url = URL(string: "https://image.tmdb.org/t/p/original" + (content.poster_path ?? ""))!
         contentImageView.kf.setImage(with: url)
     }
     

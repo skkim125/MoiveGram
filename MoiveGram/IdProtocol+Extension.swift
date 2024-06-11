@@ -16,3 +16,9 @@ extension UITableViewCell: IdProtocol {
         String(describing: self)
     }
 }
+
+extension UICollectionViewCell: IdProtocol {
+    static var id: String {
+        String(describing: self)
+    }
+}

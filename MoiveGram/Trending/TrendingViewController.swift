@@ -11,7 +11,8 @@ import SnapKit
 
 class TrendingViewController: UIViewController {
     var trendingArr: [Content] = []
-    
+    var genreList: [Genre] = []
+    var casts: [Credit] = []
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -34,6 +35,7 @@ class TrendingViewController: UIViewController {
         configureHierarchy()
         callTrendingRequest()
         configureLayout()
+        callGenreRequest()
     }
 
     func configureHierarchy() {
@@ -58,8 +60,48 @@ class TrendingViewController: UIViewController {
             case .success(let value):
                 print("\(value)\n")
                 self.trendingArr = value.results
-                self.tableView.reloadData()
+                self.callGenreRequest()
+                for i in self.trendingArr {
+                    self.callCastRequest(id: i.id)
+                }
                 
+            case.failure(let error):
+                print("\(error)")
+            }
+        }
+    }
+    
+    func callGenreRequest() {
+        let url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
+        let headers: HTTPHeaders = [
+                "Authorization": APIKey.tmdbKey,
+                "accept": "application/json"
+        ]
+        
+        AF.request(url, method: .get, headers: headers).responseDecodable(of: GenreList.self) { response in
+            switch response.result {
+            case .success(let value):
+                self.genreList = value.genres
+                self.tableView.reloadData()
+            case.failure(let error):
+                print("\(error)")
+            }
+        }
+    }
+    
+    func callCastRequest(id: Int) {
+        let url = "https://api.themoviedb.org/3/movie/\(id)/credits?language=en-US"
+        let headers: HTTPHeaders = [
+                "Authorization": APIKey.tmdbKey,
+                "accept": "application/json"
+        ]
+        
+        AF.request(url, method: .get, headers: headers).responseDecodable(of: Credit.self) { response in
+            switch response.result {
+            case .success(let value):
+                print("Credit = \(value)")
+                self.casts.append(value)
+                self.tableView.reloadData()
             case.failure(let error):
                 print("\(error)")
             }
@@ -74,7 +116,10 @@ extension TrendingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TrendingTableViewCell.id, for: indexPath) as! TrendingTableViewCell
-        cell.setTableViewCellUI(content: trendingArr[indexPath.row])
+        let dataNum = indexPath.row
+        let data = trendingArr[dataNum]
+        
+        cell.setTableViewCellUI(content: data, genres: genreList, casts: casts)
         
         return cell
     }
