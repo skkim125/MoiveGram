@@ -114,6 +114,11 @@ class SearchMovieViewController: UIViewController {
                 print("value.total_pages", value.total_pages)
                 print("value.total_results", value.total_results)
                 
+                if value.total_results == 0 {
+                    self.searchBar.text = nil
+                    self.searchBar.placeholder = "No Result"
+                }
+                
                 if self.currentPage == 1 {
                     self.searchResultsArr = self.searchMovies.results
                 } else {
@@ -163,9 +168,6 @@ extension SearchMovieViewController: UISearchBarDelegate {
             callSearchResultRequest(keyword: text)
             if text.trimmingCharacters(in: .whitespaces).isEmpty {
                 searchBar.placeholder = "Please enter at least one character"
-            } else if searchResultsArr.isEmpty {
-                searchBar.text = nil
-                searchBar.placeholder = "No Result"
             } else {
                 currentPage = 1
             }
