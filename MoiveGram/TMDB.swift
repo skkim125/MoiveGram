@@ -13,12 +13,13 @@ struct Trending: Decodable {
 
 struct Content: Decodable {
     let id: Int
-    let title: String?
+    let title: String
     let vote_average: Double
     let release_date: String
     let genre_ids: [Int]
     let backdrop_path: String?
     let poster_path: String?
+    let overview: String
 }
 
 struct GenreList: Decodable {
@@ -33,10 +34,19 @@ struct Genre: Decodable {
 struct Credit: Decodable {
     let id: Int
     let cast: [Cast]
+    let crew: [Crew]
 }
 
 struct Cast: Decodable {
     let name: String
+    let character: String
+    let profile_path: String?
+}
+
+struct Crew: Decodable {
+    let name: String
+    let department: String?
+    let profile_path: String?
 }
 
 struct SearchMovie: Decodable {

@@ -18,30 +18,17 @@ class SearchMovieViewController: UIViewController {
         
         return searchBar
     }()
-    
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.prefetchDataSource = self
+        collectionView.backgroundColor = .black
         
         collectionView.register(SearchMovieCollectionViewCell.self, forCellWithReuseIdentifier: SearchMovieCollectionViewCell.id)
         
         return collectionView
     }()
-    
-    func collectionViewLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
-        let width = UIScreen.main.bounds.width-40
-        
-        layout.itemSize = CGSize(width: width/3, height: width/3 + 40)
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        layout.sectionInset = .init(top: 10, left: 10, bottom: 10, right: 10)
-        layout.scrollDirection = .vertical
-        
-        return layout
-    }
     
     var trendingArr: [Content] = []
     var searchResultsArr: [Content] = []
@@ -50,20 +37,23 @@ class SearchMovieViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         
-        navigationItem.title = "Search Movie"
+        configureView()
         configureHierarchy()
         configureLayout()
         callTrendingRequest()
     }
     
+    func configureView() {
+        view.backgroundColor = .black
+
+        navigationItem.title = "Search Movie"
+    }
     func configureHierarchy() {
         // MARK: addSubView()
         view.addSubview(searchBar)
         view.addSubview(collectionView)
     }
-    
     func configureLayout() {
         searchBar.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
@@ -75,7 +65,28 @@ class SearchMovieViewController: UIViewController {
             make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
+}
+
+// MARK: - Methods
+extension SearchMovieViewController {
     
+    /// 컬렉션뷰 셀 레이아웃
+    func collectionViewLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewFlowLayout()
+        let sectionSpacing: CGFloat = 12
+        let cellSpacing: CGFloat = 12
+        let width = UIScreen.main.bounds.width - (sectionSpacing * 2 + cellSpacing * 2)
+        
+        layout.itemSize = CGSize(width: width/3, height: width/3 * 1.5)
+        layout.minimumLineSpacing = cellSpacing
+        layout.minimumInteritemSpacing = cellSpacing
+        layout.sectionInset = .init(top: sectionSpacing, left: sectionSpacing, bottom: sectionSpacing, right: sectionSpacing)
+        layout.scrollDirection = .vertical
+        
+        return layout
+    }
+    
+    /// Trending 영화 불러오기
     func callTrendingRequest() {
         let url = "https://api.themoviedb.org/3/trending/movie/week"
         let header: HTTPHeaders = [
@@ -97,6 +108,7 @@ class SearchMovieViewController: UIViewController {
         }
     }
     
+    /// 검색 결과 불러오기
     func callSearchResultRequest(keyword: String) {
         let url = "https://api.themoviedb.org/3/search/movie"
         let header: HTTPHeaders = [
@@ -138,6 +150,7 @@ class SearchMovieViewController: UIViewController {
     }
 }
 
+// MARK: - CollectionView extension
 extension SearchMovieViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return searchResultsArr.isEmpty ? trendingArr.count : searchResultsArr.count
@@ -161,6 +174,20 @@ extension SearchMovieViewController: UICollectionViewDelegate, UICollectionViewD
     
 }
 
+extension SearchMovieViewController: UICollectionViewDataSourcePrefetching {
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        for item in indexPaths {
+            if searchResultsArr.count-2 == item.item && searchMovies.page != searchMovies.total_pages {
+                currentPage += 1
+                callSearchResultRequest(keyword: searchBar.text!)
+            }
+        }
+    }
+    
+}
+
+// MARK: - UISearchBar extension
 extension SearchMovieViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchResultsArr.removeAll()
@@ -173,17 +200,4 @@ extension SearchMovieViewController: UISearchBarDelegate {
             }
         }
     }
-}
-
-extension SearchMovieViewController: UICollectionViewDataSourcePrefetching {
-    
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        for item in indexPaths {
-            if searchResultsArr.count-2 == item.item && searchMovies.page != searchMovies.total_pages {
-                currentPage += 1
-                callSearchResultRequest(keyword: searchBar.text!)
-            }
-        }
-    }
-    
 }

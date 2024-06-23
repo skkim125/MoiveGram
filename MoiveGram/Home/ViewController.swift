@@ -20,52 +20,37 @@ class ViewController: UIViewController {
     }()
     
     let idTextField: UITextField = {
-        let tf = UITextField()
+        let tf = LoginViewTextField()
+        tf.setupTF(placeholder: LoginViewTFConstant.placeholder.id.rawValue)
         // NSAttributedString: 문자열에 관련된 속성(폰트, 문자 사이의 간격 등등)을 커스텀할 때 사용
-        tf.attributedPlaceholder = NSAttributedString(string: "이메일 주소 또는 전화번호", attributes: [.foregroundColor: UIColor.white])
-        tf.textAlignment = .center
-        tf.layer.cornerRadius = 8
-        tf.backgroundColor = .lightGray
         
         return tf
     }()
     
     let passwordTextField: UITextField = {
-        let tf = UITextField()
-        tf.attributedPlaceholder = NSAttributedString(string: "비밀번호", attributes: [.foregroundColor: UIColor.white])
-        tf.textAlignment = .center
-        tf.layer.cornerRadius = 8
-        tf.backgroundColor = .lightGray
+        let tf = LoginViewTextField()
+        tf.setupTF(placeholder: LoginViewTFConstant.placeholder.password.rawValue)
         
         return tf
     }()
     
     let nicknameTextField: UITextField = {
-        let tf = UITextField()
-        tf.attributedPlaceholder = NSAttributedString(string: "닉네임", attributes: [.foregroundColor: UIColor.white])
-        tf.textAlignment = .center
-        tf.layer.cornerRadius = 8
-        tf.backgroundColor = .lightGray
+        let tf = LoginViewTextField()
+        tf.setupTF(placeholder: LoginViewTFConstant.placeholder.nickname.rawValue)
         
         return tf
     }()
     
     let countryTextField: UITextField = {
-        let tf = UITextField()
-        tf.attributedPlaceholder = NSAttributedString(string: "위치", attributes: [.foregroundColor: UIColor.white])
-        tf.textAlignment = .center
-        tf.layer.cornerRadius = 8
-        tf.backgroundColor = .lightGray
+        let tf = LoginViewTextField()
+        tf.setupTF(placeholder: LoginViewTFConstant.placeholder.country.rawValue)
         
         return tf
     }()
     
     let recommandCodeTextField: UITextField = {
-        let tf = UITextField()
-        tf.attributedPlaceholder = NSAttributedString(string: "추천코드", attributes: [.foregroundColor: UIColor.white])
-        tf.textAlignment = .center
-        tf.layer.cornerRadius = 8
-        tf.backgroundColor = .lightGray
+        let tf = LoginViewTextField()
+        tf.setupTF(placeholder: LoginViewTFConstant.placeholder.recommandCode.rawValue)
         
         return tf
     }()

@@ -11,7 +11,7 @@ class SearchMovieCollectionViewCell: UICollectionViewCell {
     lazy var imgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleToFill
-        imgView.layer.cornerRadius = 12
+        imgView.layer.cornerRadius = SearchMovieConstant.imgCornerRadius
         imgView.clipsToBounds = true
         
         return imgView
@@ -38,6 +38,7 @@ class SearchMovieCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    /// 컬렉션뷰 셀 UI 세팅 메서드
     func configureMovieImg(data: Content) {
         if let image = data.poster_path {
             let url = URL(string: "https://image.tmdb.org/t/p/original" + image)!

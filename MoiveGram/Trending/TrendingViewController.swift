@@ -10,9 +10,6 @@ import Alamofire
 import SnapKit
 
 class TrendingViewController: UIViewController {
-    var trendingArr: [Content] = []
-    var genreList: [Genre] = []
-    var casts: [Credit] = []
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -26,7 +23,9 @@ class TrendingViewController: UIViewController {
         return tableView
     }()
     
-    
+    var trendingArr: [Content] = []
+    var genreList: [Genre] = []
+    var credits: [Credit] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +46,11 @@ class TrendingViewController: UIViewController {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    
+}
+
+// MARK: - Methods
+extension TrendingViewController {
+    /// 이주의 Trending 영화 불러오기 + 장르리스트 & 캐스팅 메서드 호출
     func callTrendingRequest() {
         let url = "https://api.themoviedb.org/3/trending/movie/week"
         let header: HTTPHeaders = [
@@ -64,13 +67,15 @@ class TrendingViewController: UIViewController {
                 for i in self.trendingArr {
                     self.callCastRequest(id: i.id)
                 }
-                
+                //self.tableView.reloadData()
             case.failure(let error):
                 print("\(error)")
             }
         }
+        
     }
     
+    /// 영화 장르 리스트 불러오기
     func callGenreRequest() {
         let url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
         let headers: HTTPHeaders = [
@@ -82,13 +87,13 @@ class TrendingViewController: UIViewController {
             switch response.result {
             case .success(let value):
                 self.genreList = value.genres
-                self.tableView.reloadData()
             case.failure(let error):
                 print("\(error)")
             }
         }
     }
     
+    /// 영화 캐스팅 불러오기
     func callCastRequest(id: Int) {
         let url = "https://api.themoviedb.org/3/movie/\(id)/credits?language=en-US"
         let headers: HTTPHeaders = [
@@ -100,7 +105,7 @@ class TrendingViewController: UIViewController {
             switch response.result {
             case .success(let value):
                 print("Credit = \(value)")
-                self.casts.append(value)
+                self.credits.append(value)
                 self.tableView.reloadData()
             case.failure(let error):
                 print("\(error)")
@@ -109,6 +114,7 @@ class TrendingViewController: UIViewController {
     }
 }
 
+// MARK: - UITableView extension
 extension TrendingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        return trendingArr.count
@@ -116,16 +122,24 @@ extension TrendingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TrendingTableViewCell.id, for: indexPath) as! TrendingTableViewCell
-        let dataNum = indexPath.row
-        let data = trendingArr[dataNum]
+        let dataidx = indexPath.row
+        let data = trendingArr[dataidx]
         
-        cell.setTableViewCellUI(content: data, genres: genreList, casts: casts)
+        cell.setTableViewCellUI(content: data, genres: genreList, credits: credits)
+        cell.selectionStyle = .none
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(trendingArr[indexPath.row])
+        let dataidx = indexPath.row
+        let data = trendingArr[dataidx]
+        
+        let vc = TrendingDetailViewController()
+        
+        
+        navigationController?.pushViewController(vc, animated: true)
+        
     }
     
 }

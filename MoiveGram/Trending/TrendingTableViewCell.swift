@@ -23,16 +23,15 @@ class TrendingTableViewCell: UITableViewCell {
     
     lazy var releaseDateLabel: UILabel = {
         let label = UILabel()
-        label.text = "2222222222"
-        label.font = .systemFont(ofSize: 14)
         label.textColor = .darkGray
+        label.font = .systemFont(ofSize: 14)
         
         return label
     }()
     
     lazy var genreLabel: UILabel = {
         let label = UILabel()
-        label.text = "#Mystery"
+        label.textColor = .black
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         
         return label
@@ -51,8 +50,8 @@ class TrendingTableViewCell: UITableViewCell {
     lazy var rateStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [rateInfoLabel, rateLabel])
         sv.spacing = 0
-        sv.layer.shadowRadius = 10
-        sv.layer.shadowOpacity = 0.8
+        sv.layer.shadowOpacity = 0.4
+        sv.layer.cornerRadius = 12
         
         return sv
     }()
@@ -60,7 +59,7 @@ class TrendingTableViewCell: UITableViewCell {
     lazy var rateInfoLabel: UILabel = {
         let label = UILabel()
         label.text = "평점"
-        label.font = .systemFont(ofSize: 13)
+        label.font = .systemFont(ofSize: 14)
         label.textColor = .white
         label.textAlignment = .center
         label.backgroundColor = .darkGray
@@ -70,8 +69,7 @@ class TrendingTableViewCell: UITableViewCell {
     
     lazy var rateLabel: UILabel = {
        let label = UILabel()
-        label.text = "3.3"
-        label.font = .systemFont(ofSize: 13)
+        label.font = .systemFont(ofSize: 14)
         label.textColor = .black
         label.textAlignment = .center
         label.backgroundColor = .white
@@ -91,6 +89,7 @@ class TrendingTableViewCell: UITableViewCell {
     
     lazy var titleLabel: UILabel = {
        let label = UILabel()
+        label.textColor = .black
         label.font = .systemFont(ofSize: 17, weight: .medium)
         
         return label
@@ -98,8 +97,8 @@ class TrendingTableViewCell: UITableViewCell {
     
     lazy var actorsLabel: UILabel =  {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
         label.textColor = .darkGray
+        label.font = .systemFont(ofSize: 14)
         
         return label
     }()
@@ -120,6 +119,7 @@ class TrendingTableViewCell: UITableViewCell {
     lazy var moreLabel: UILabel = {
        let label = UILabel()
         label.text = "자세히 보기"
+        label.textColor = .black
         label.font = .systemFont(ofSize: 13)
         
         return label
@@ -240,7 +240,8 @@ class TrendingTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setTableViewCellUI(content: Content, genres: [Genre], casts: [Credit]) {
+    /// 테이블뷰 셀 UI 세팅
+    func setTableViewCellUI(content: Content, genres: [Genre], credits: [Credit]) {
         let contentGenre = content.genre_ids.first!
         let genreArr = genres.filter { $0.id == contentGenre }
         var genreFirst = ""
@@ -255,14 +256,21 @@ class TrendingTableViewCell: UITableViewCell {
         releaseDateLabel.text = content.release_date
         titleLabel.text = content.title
         
-        let filterdArr = casts.filter { $0.id == content.id }
-        filterdArr.forEach { credit in
-            for c in credit.cast {
-                actorsLabelText.append(contentsOf: "\(c.name), ")
-            }
-        }
+        let filterdArr = credits.filter { $0.id == content.id }
         
-        actorsLabel.text = actorsLabelText
+        filterdArr.forEach { credit in
+            let allCast = credit.cast.reduce("") { _ , cast in
+                actorsLabelText.append("\(cast.name), ")
+                
+                if cast.name == credit.cast.last!.name {
+                    actorsLabelText.removeLast()
+                    actorsLabelText.removeLast()
+                }
+                return actorsLabelText
+            }
+            
+            actorsLabel.text = allCast
+        }
         
         let url = URL(string: "https://image.tmdb.org/t/p/original" + (content.poster_path ?? ""))!
         contentImageView.kf.setImage(with: url)
