@@ -61,7 +61,6 @@ extension TrendingViewController {
         AF.request(url, method: .get, headers: header).responseDecodable(of: Trending.self) { response in
             switch response.result {
             case .success(let value):
-                print("\(value)\n")
                 self.trendingArr = value.results
                 self.callGenreRequest()
                 for i in self.trendingArr {
@@ -104,7 +103,6 @@ extension TrendingViewController {
         AF.request(url, method: .get, headers: headers).responseDecodable(of: Credit.self) { response in
             switch response.result {
             case .success(let value):
-                print("Credit = \(value)")
                 self.credits.append(value)
                 self.tableView.reloadData()
             case.failure(let error):
@@ -132,11 +130,12 @@ extension TrendingViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dataidx = indexPath.row
-        let data = trendingArr[dataidx]
+        let dataIdx = indexPath.row
+        let data = trendingArr[dataIdx]
         
         let vc = TrendingDetailViewController()
-        
+        vc.content = data
+        vc.configureTrendingDetailViewUI(content: data)
         
         navigationController?.pushViewController(vc, animated: true)
         

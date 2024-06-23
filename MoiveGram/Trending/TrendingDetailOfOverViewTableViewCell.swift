@@ -20,9 +20,9 @@ class TrendingDetailOfOverViewTableViewCell: UITableViewCell {
     
     lazy var extensionButton = {
         let button = UIButton()
-        button.backgroundColor = .blue
         button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
         button.addTarget(self, action: #selector(extensionButtonTapped), for: .touchUpInside)
+        button.tintColor = .black
         
         return button
     }()
@@ -49,34 +49,25 @@ class TrendingDetailOfOverViewTableViewCell: UITableViewCell {
         overViewLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView.safeAreaLayoutGuide).offset(12)
             make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(28)
-            // make.height.greaterThanOrEqualTo(60)
         }
         
         extensionButton.snp.makeConstraints { make in
             make.centerX.equalTo(contentView)
-            make.top.greaterThanOrEqualTo(overViewLabel.snp.bottom).offset(12)
+            make.top.equalTo(overViewLabel.snp.bottom).offset(12)
             make.bottom.equalTo(contentView.safeAreaLayoutGuide).inset(12)
             make.size.equalTo(30)
         }
     }
  
-//    func configureUI(/*content: Content*/) {
-////        overViewLabel.text = content.overview
-//        
-//        if isExtension {
-//            overViewLabel.numberOfLines = 0
-//        } else {
-//            overViewLabel.numberOfLines = 2
-//        }
-//    }
+    func configureOverviewUI(content: Content) {
+        overViewLabel.text = content.overview
+    }
     
     @objc func extensionButtonTapped() {
         isExtension.toggle()
         extensionButton.setImage(UIImage(systemName: isExtension ? "chevron.up" : "chevron.down"), for: .normal)
-        if isExtension {
-            overViewLabel.numberOfLines = 0
-        } else {
-            overViewLabel.numberOfLines = 2
-        }
+        overViewLabel.numberOfLines = isExtension ? 0 : 2
+
+        invalidateIntrinsicContentSize()
     }
 }
