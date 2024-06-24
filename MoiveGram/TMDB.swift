@@ -39,7 +39,7 @@ struct Credit: Decodable {
 
 struct Cast: Decodable {
     let name: String
-    let character: String
+    let character: String?
     let profile_path: String?
 }
 

@@ -272,13 +272,26 @@ class TrendingTableViewCell: UITableViewCell {
             actorsLabel.text = allCast
         }
         
-        let url = URL(string: "https://image.tmdb.org/t/p/original" + (content.poster_path ?? ""))!
-        contentImageView.kf.setImage(with: url)
+        let url = URL(string: "https://image.tmdb.org/t/p/w500" + (content.poster_path ?? ""))!
+        
+        DispatchQueue.global().async {
+            do {
+                let data = try Data(contentsOf: url)
+                
+                DispatchQueue.main.async {
+                    self.contentImageView.image = UIImage(data: data)
+                }
+                
+            } catch {
+                print(error)
+            }
+        }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
+        contentImageView.image = nil
         backgroundColor = .white
     }
     

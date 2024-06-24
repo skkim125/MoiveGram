@@ -32,6 +32,8 @@ class TrendingDetailViewController: UIViewController {
         imgView.layer.shadowOffset = .zero
         imgView.layer.shadowRadius = 3
         imgView.layer.shadowOpacity = 1
+        imgView.layer.borderWidth = 0.8
+        imgView.layer.borderColor = UIColor.white.withAlphaComponent(0.8).cgColor
         
         return imgView
     }()
@@ -43,13 +45,12 @@ class TrendingDetailViewController: UIViewController {
         tv.register(TrendingDetailOfOverViewTableViewCell.self, forCellReuseIdentifier: TrendingDetailOfOverViewTableViewCell.id)
         tv.register(TrendingDetailOfCreditTableViewCell.self, forCellReuseIdentifier: TrendingDetailOfCreditTableViewCell.id)
         tv.isUserInteractionEnabled = true
-        tv.rowHeight = UITableView.automaticDimension
-        tv.estimatedRowHeight = UITableView.automaticDimension
         
         return tv
     }()
     
     var content: Content?
+    var credits: Credit?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,24 +96,46 @@ class TrendingDetailViewController: UIViewController {
     }
     
     func configureTrendingDetailViewUI(content: Content) {
-        let bgUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.poster_path ?? ""))!
+        let bgUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.backdrop_path ?? ""))!
         let posterUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.poster_path ?? ""))!
-        movieBGImageView.kf.setImage(with: bgUrl)
+        DispatchQueue.global().async {
+            do {
+                let bgData = try Data(contentsOf: bgUrl)
+                let posterData = try Data(contentsOf: posterUrl)
+                
+                DispatchQueue.main.async {
+                    self.movieBGImageView.image = UIImage(data: bgData)
+                    self.moviePosterImageView.image = UIImage(data: posterData)
+                }
+                
+            } catch {
+                print(error)
+            }
+        }
         movieTitleLabel.text = content.title
-        moviePosterImageView.kf.setImage(with: posterUrl)
     }
 }
 
 extension TrendingDetailViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        } else if section == 1 {
-            return 5
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 0:
+            return UITableView.automaticDimension
+        default:
+            return 100
         }
-        
-        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let credit = credits {
+            if section == 1 {
+                return credit.cast.count
+            } else if section == 2 {
+                return credit.crew.count
+            }
+        }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -131,13 +154,19 @@ extension TrendingDetailViewController: UITableViewDelegate, UITableViewDataSour
             let cell = tableView.dequeueReusableCell(withIdentifier: TrendingDetailOfCreditTableViewCell.id, for: indexPath) as! TrendingDetailOfCreditTableViewCell
             cell.selectionStyle = .none
             
-            if let c = content {
-                cell.configureCellUI(content: c)
+            if let c = credits {
+                let data = c.cast[indexPath.row]
+                cell.configureCastCellUI(cast: data)
             }
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: TrendingDetailOfCreditTableViewCell.id, for: indexPath) as! TrendingDetailOfCreditTableViewCell
             cell.selectionStyle = .none
+            
+            if let c = credits {
+                let data = c.crew[indexPath.row]
+                cell.configureCrewCellUI(crew: data)
+            }
             
             return cell
         }

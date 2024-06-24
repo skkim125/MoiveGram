@@ -135,6 +135,7 @@ extension TrendingViewController: UITableViewDelegate, UITableViewDataSource {
         
         let vc = TrendingDetailViewController()
         vc.content = data
+        vc.credits = credits[indexPath.row]
         vc.configureTrendingDetailViewUI(content: data)
         
         navigationController?.pushViewController(vc, animated: true)
