@@ -18,6 +18,12 @@
 		0464675E2C18402000FCCFF0 /* SearchMovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0464675D2C18402000FCCFF0 /* SearchMovieViewController.swift */; };
 		046467642C18445C00FCCFF0 /* SearchMovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046467632C18445C00FCCFF0 /* SearchMovieCollectionViewCell.swift */; };
 		04C40C922C28490100052A82 /* TrendingDetailOfCreditTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C40C912C28490100052A82 /* TrendingDetailOfCreditTableViewCell.swift */; };
+		04C40CB82C295FC900052A82 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C40CB72C295FC900052A82 /* TabViewController.swift */; };
+		04C40CBA2C29666900052A82 /* SimilarMovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C40CB92C29666900052A82 /* SimilarMovieViewController.swift */; };
+		04C40CBE2C2976FF00052A82 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04C40CBD2C2976FF00052A82 /* IQKeyboardManagerSwift */; };
+		04C40CC02C298D2C00052A82 /* SimilarMovieTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C40CBF2C298D2C00052A82 /* SimilarMovieTableViewCell.swift */; };
+		04C40CC22C2998D500052A82 /* TMDBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C40CC12C2998D500052A82 /* TMDBManager.swift */; };
+		04C40CC42C29A65700052A82 /* SimilarMovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C40CC32C29A65700052A82 /* SimilarMovieCollectionViewCell.swift */; };
 		04DEC2512C196BD500AAD523 /* CustomViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DEC2502C196BD500AAD523 /* CustomViews.swift */; };
 		04DEC2532C196CA600AAD523 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DEC2522C196CA600AAD523 /* Enums.swift */; };
 		04DEC2552C197A1A00AAD523 /* TrendingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DEC2542C197A1A00AAD523 /* TrendingDetailViewController.swift */; };
@@ -42,6 +48,11 @@
 		0464675D2C18402000FCCFF0 /* SearchMovieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMovieViewController.swift; sourceTree = "<group>"; };
 		046467632C18445C00FCCFF0 /* SearchMovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		04C40C912C28490100052A82 /* TrendingDetailOfCreditTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrendingDetailOfCreditTableViewCell.swift; sourceTree = "<group>"; };
+		04C40CB72C295FC900052A82 /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
+		04C40CB92C29666900052A82 /* SimilarMovieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarMovieViewController.swift; sourceTree = "<group>"; };
+		04C40CBF2C298D2C00052A82 /* SimilarMovieTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarMovieTableViewCell.swift; sourceTree = "<group>"; };
+		04C40CC12C2998D500052A82 /* TMDBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBManager.swift; sourceTree = "<group>"; };
+		04C40CC32C29A65700052A82 /* SimilarMovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarMovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		04DEC2502C196BD500AAD523 /* CustomViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViews.swift; sourceTree = "<group>"; };
 		04DEC2522C196CA600AAD523 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		04DEC2542C197A1A00AAD523 /* TrendingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingDetailViewController.swift; sourceTree = "<group>"; };
@@ -63,6 +74,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0434F40C2C1700150079438F /* Kingfisher in Frameworks */,
+				04C40CBE2C2976FF00052A82 /* IQKeyboardManagerSwift in Frameworks */,
 				04FCEF6F2C0EF7B500FB09B1 /* SnapKit in Frameworks */,
 				0434F3FB2C16C50D0079438F /* Alamofire in Frameworks */,
 			);
@@ -88,6 +100,7 @@
 			children = (
 				0464675D2C18402000FCCFF0 /* SearchMovieViewController.swift */,
 				046467632C18445C00FCCFF0 /* SearchMovieCollectionViewCell.swift */,
+				04C40CBB2C29697A00052A82 /* SimilarMovie */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -99,6 +112,16 @@
 				04FCEF702C0F0C6D00FB09B1 /* HomeViewController.swift */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		04C40CBB2C29697A00052A82 /* SimilarMovie */ = {
+			isa = PBXGroup;
+			children = (
+				04C40CB92C29666900052A82 /* SimilarMovieViewController.swift */,
+				04C40CBF2C298D2C00052A82 /* SimilarMovieTableViewCell.swift */,
+				04C40CC32C29A65700052A82 /* SimilarMovieCollectionViewCell.swift */,
+			);
+			path = SimilarMovie;
 			sourceTree = "<group>";
 		};
 		04FCEF4D2C0EF71C00FB09B1 = {
@@ -125,6 +148,7 @@
 				04FCEF5B2C0EF71C00FB09B1 /* SceneDelegate.swift */,
 				04DEC2502C196BD500AAD523 /* CustomViews.swift */,
 				04DEC2522C196CA600AAD523 /* Enums.swift */,
+				04C40CB72C295FC900052A82 /* TabViewController.swift */,
 				046467622C18406D00FCCFF0 /* Home */,
 				046467602C18404300FCCFF0 /* Trending */,
 				046467612C18404F00FCCFF0 /* Search */,
@@ -133,6 +157,7 @@
 				04FCEF642C0EF71E00FB09B1 /* LaunchScreen.storyboard */,
 				04FCEF672C0EF71E00FB09B1 /* Info.plist */,
 				0434F4042C16D1800079438F /* TMDB.swift */,
+				04C40CC12C2998D500052A82 /* TMDBManager.swift */,
 				0434F4082C16D59A0079438F /* IdProtocol+Extension.swift */,
 				0434F4002C16C56A0079438F /* APIKey.swift */,
 			);
@@ -159,6 +184,7 @@
 				04FCEF6E2C0EF7B500FB09B1 /* SnapKit */,
 				0434F3FA2C16C50D0079438F /* Alamofire */,
 				0434F40B2C1700150079438F /* Kingfisher */,
+				04C40CBD2C2976FF00052A82 /* IQKeyboardManagerSwift */,
 			);
 			productName = MoiveGram;
 			productReference = 04FCEF562C0EF71C00FB09B1 /* MoiveGram.app */;
@@ -192,6 +218,7 @@
 				04FCEF6D2C0EF7B500FB09B1 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				0434F3F92C16C50D0079438F /* XCRemoteSwiftPackageReference "Alamofire" */,
 				0434F40A2C1700150079438F /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				04C40CBC2C2976FF00052A82 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = 04FCEF572C0EF71C00FB09B1 /* Products */;
 			projectDirPath = "";
@@ -223,9 +250,11 @@
 			files = (
 				04FCEF5E2C0EF71C00FB09B1 /* ViewController.swift in Sources */,
 				04FCEF5A2C0EF71C00FB09B1 /* AppDelegate.swift in Sources */,
+				04C40CC22C2998D500052A82 /* TMDBManager.swift in Sources */,
 				04FCEF5C2C0EF71C00FB09B1 /* SceneDelegate.swift in Sources */,
 				04DEC2592C198FE500AAD523 /* TrendingDetailOfOverViewTableViewCell.swift in Sources */,
 				04FCEF712C0F0C6D00FB09B1 /* HomeViewController.swift in Sources */,
+				04C40CC42C29A65700052A82 /* SimilarMovieCollectionViewCell.swift in Sources */,
 				04C40C922C28490100052A82 /* TrendingDetailOfCreditTableViewCell.swift in Sources */,
 				0434F4072C16D56E0079438F /* TrendingTableViewCell.swift in Sources */,
 				0434F4052C16D1800079438F /* TMDB.swift in Sources */,
@@ -233,7 +262,10 @@
 				0434F4092C16D59A0079438F /* IdProtocol+Extension.swift in Sources */,
 				04DEC2532C196CA600AAD523 /* Enums.swift in Sources */,
 				0434F4012C16C56A0079438F /* APIKey.swift in Sources */,
+				04C40CC02C298D2C00052A82 /* SimilarMovieTableViewCell.swift in Sources */,
+				04C40CB82C295FC900052A82 /* TabViewController.swift in Sources */,
 				0434F4032C16C87E0079438F /* TrendingViewController.swift in Sources */,
+				04C40CBA2C29666900052A82 /* SimilarMovieViewController.swift in Sources */,
 				04DEC2512C196BD500AAD523 /* CustomViews.swift in Sources */,
 				046467642C18445C00FCCFF0 /* SearchMovieCollectionViewCell.swift in Sources */,
 				0464675E2C18402000FCCFF0 /* SearchMovieViewController.swift in Sources */,
@@ -485,6 +517,14 @@
 				minimumVersion = 7.11.0;
 			};
 		};
+		04C40CBC2C2976FF00052A82 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.3;
+			};
+		};
 		04FCEF6D2C0EF7B500FB09B1 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -505,6 +545,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0434F40A2C1700150079438F /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		04C40CBD2C2976FF00052A82 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04C40CBC2C2976FF00052A82 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
 		};
 		04FCEF6E2C0EF7B500FB09B1 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -42,11 +42,26 @@ class SearchMovieCollectionViewCell: UICollectionViewCell {
     func configureMovieImg(data: Content) {
         if let image = data.poster_path {
             let url = URL(string: "https://image.tmdb.org/t/p/original" + image)!
-            imgView.kf.setImage(with: url)
+            DispatchQueue.global(qos: .userInteractive).async {
+                do {
+                    let data = try Data(contentsOf: url)
+                    DispatchQueue.main.async {
+                        self.imgView.image = UIImage(data: data)
+                    }
+                } catch {
+                    
+                }
+            }
         } else {
             imgView.image = UIImage(systemName: "questionmark")
             imgView.tintColor = .white
             imgView.backgroundColor = .gray
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        imgView.image = nil
     }
 }

@@ -13,7 +13,7 @@ struct Trending: Decodable {
 
 struct Content: Decodable {
     let id: Int
-    let title: String
+    let original_title: String
     let vote_average: Double
     let release_date: String
     let genre_ids: [Int]
@@ -54,4 +54,30 @@ struct SearchMovie: Decodable {
     let results: [Content]
     let total_pages: Int
     let total_results: Int
+}
+
+struct SimilarMovies: Decodable {
+    var results: [SimilarMovie]
+    var total_results: Int
+}
+
+struct SimilarMovie: Decodable {
+    var poster_path: String?
+}
+
+struct Recommendations: Decodable {
+    var results: [Recommendation]
+    var total_results: Int
+}
+
+struct Recommendation: Decodable {
+    var poster_path: String?
+}
+
+struct Posters: Decodable {
+    var posters: [Poster]
+}
+
+struct Poster: Decodable {
+    var file_path: String?
 }

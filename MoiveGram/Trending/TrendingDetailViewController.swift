@@ -112,7 +112,7 @@ class TrendingDetailViewController: UIViewController {
                 print(error)
             }
         }
-        movieTitleLabel.text = content.title
+        movieTitleLabel.text = content.original_title
     }
 }
 

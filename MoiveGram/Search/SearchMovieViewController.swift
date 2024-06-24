@@ -15,6 +15,8 @@ class SearchMovieViewController: UIViewController {
         let searchBar = UISearchBar()
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
+        searchBar.searchTextField.backgroundColor = .darkGray
+        searchBar.searchTextField.textColor = .white
         
         return searchBar
     }()
@@ -46,8 +48,8 @@ class SearchMovieViewController: UIViewController {
     
     func configureView() {
         view.backgroundColor = .black
-
         navigationItem.title = "Search Movie"
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
     func configureHierarchy() {
         // MARK: addSubView()
@@ -116,7 +118,8 @@ extension SearchMovieViewController {
         ]
         let paramters: Parameters = [
             "query": keyword,
-            "page": currentPage
+            "page": currentPage,
+            "language": "kr-Ko"
         ]
         
         AF.request(url, method: .get, parameters: paramters, headers: header).responseDecodable(of: SearchMovie.self) { response in
@@ -148,6 +151,12 @@ extension SearchMovieViewController {
             }
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
 }
 
 // MARK: - CollectionView extension
@@ -162,7 +171,7 @@ extension SearchMovieViewController: UICollectionViewDelegate, UICollectionViewD
         guard searchResultsArr.isEmpty else {
             let data = searchResultsArr[indexPath.row]
             cell.configureMovieImg(data: data)
-            
+            print(data)
             return cell
         }
         
@@ -170,6 +179,16 @@ extension SearchMovieViewController: UICollectionViewDelegate, UICollectionViewD
         cell.configureMovieImg(data: data)
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let data = searchResultsArr.isEmpty ? trendingArr[indexPath.item] : searchResultsArr[indexPath.item]
+        // let cell = collectionView.cellForItem(at: indexPath)
+        
+        let vc = SimilarMovieViewController()
+        vc.movie = data
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }
@@ -199,5 +218,12 @@ extension SearchMovieViewController: UISearchBarDelegate {
                 currentPage = 1
             }
         }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = nil
+        print("안녕")
+        searchResultsArr.removeAll()
+        callTrendingRequest()
     }
 }

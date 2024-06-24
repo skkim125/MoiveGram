@@ -254,7 +254,7 @@ class TrendingTableViewCell: UITableViewCell {
         genreLabel.text = "#\(genreFirst)"
         rateLabel.text = String(format: "%.1f", content.vote_average)
         releaseDateLabel.text = content.release_date
-        titleLabel.text = content.title
+        titleLabel.text = content.original_title
         
         let filterdArr = credits.filter { $0.id == content.id }
         

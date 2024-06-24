@@ -94,7 +94,7 @@ extension TrendingViewController {
     
     /// 영화 캐스팅 불러오기
     func callCastRequest(id: Int) {
-        let url = "https://api.themoviedb.org/3/movie/\(id)/credits?language=en-US"
+        let url = "https://api.themoviedb.org/3/movie/\(id)/credits?language=kr-Ko"
         let headers: HTTPHeaders = [
                 "Authorization": APIKey.tmdbKey,
                 "accept": "application/json"
