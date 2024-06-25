@@ -12,6 +12,7 @@ class SimilarMovieCollectionViewCell: UICollectionViewCell {
     
     lazy var posterView = {
         let imgView = UIImageView()
+        imgView.image = nil
         imgView.contentMode = .scaleAspectFill
         imgView.layer.borderWidth = 0.8
         imgView.layer.borderColor = UIColor.white.withAlphaComponent(0.8).cgColor
@@ -36,24 +37,23 @@ class SimilarMovieCollectionViewCell: UICollectionViewCell {
     }
     
     func configureLayout() {
-        contentView.snp.makeConstraints { make in
-            make.verticalEdges.equalTo(safeAreaLayoutGuide).inset(10)
-            make.horizontalEdges.equalTo(safeAreaInsets).inset(5)
-        }
         
         posterView.snp.makeConstraints { make in
-            make.edges.equalTo(contentView.safeAreaLayoutGuide).inset(5)
+            make.edges.equalToSuperview().inset(5)
         }
     }
     
     func configurePosterView(data: String) {
         let url = URL(string: "https://image.tmdb.org/t/p/original" + data)!
         
+        //        posterView.kf.setImage(with: url)
+        
         DispatchQueue.global(qos: .userInteractive).async {
             do {
                 let data = try Data(contentsOf: url)
+                let image = UIImage(data: data)
                 DispatchQueue.main.async {
-                    self.posterView.image = UIImage(data: data)
+                    self.posterView.image = image
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -62,12 +62,6 @@ class SimilarMovieCollectionViewCell: UICollectionViewCell {
                 }
             }
         }
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        posterView.image = nil
     }
     
     override func layoutSubviews() {

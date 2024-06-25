@@ -20,3 +20,9 @@ enum LoginViewTFConstant {
 enum SearchMovieConstant {
     static let imgCornerRadius: CGFloat = 12
 }
+
+enum SectionType: String, CaseIterable {
+    case similar = "비슷한 영화"
+    case recomandation = "추천 영화"
+    case poster = "포스터"
+}

@@ -34,7 +34,7 @@ class SearchMovieViewController: UIViewController {
     
     var trendingArr: [Content] = []
     var searchResultsArr: [Content] = []
-    var searchMovies: SearchMovie = SearchMovie(page: 0, results: [], total_pages: 0, total_results: 0)
+    var searchMovies: SearchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0)
     var currentPage = 1
     
     override func viewDidLoad() {
@@ -43,7 +43,7 @@ class SearchMovieViewController: UIViewController {
         configureView()
         configureHierarchy()
         configureLayout()
-        callTrendingRequest()
+        getTrending()
     }
     
     func configureView() {
@@ -51,11 +51,13 @@ class SearchMovieViewController: UIViewController {
         navigationItem.title = "Search Movie"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
+    
     func configureHierarchy() {
         // MARK: addSubView()
         view.addSubview(searchBar)
         view.addSubview(collectionView)
     }
+    
     func configureLayout() {
         searchBar.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
@@ -65,6 +67,19 @@ class SearchMovieViewController: UIViewController {
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom)
             make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+    
+    func getTrending() {
+        DispatchQueue.global().async {
+            TMDBManager.shared.callTrendingRequest { results in
+                DispatchQueue.main.async {
+                    for i in 0...5 {
+                        self.trendingArr.append(results[i])
+                    }
+                    self.collectionView.reloadData()
+                }
+            }
         }
     }
 }
@@ -88,70 +103,6 @@ extension SearchMovieViewController {
         return layout
     }
     
-    /// Trending 영화 불러오기
-    func callTrendingRequest() {
-        let url = "https://api.themoviedb.org/3/trending/movie/week"
-        let header: HTTPHeaders = [
-            "Authorization": APIKey.tmdbKey,
-            "accept": "application/json"
-        ]
-        
-        AF.request(url, method: .get, headers: header).responseDecodable(of: Trending.self) { response in
-            switch response.result {
-            case .success(let value):
-                for i in 0...5 {
-                    self.trendingArr.append(value.results[i])
-                }
-                self.collectionView.reloadData()
-                
-            case.failure(let error):
-                print("\(error)")
-            }
-        }
-    }
-    
-    /// 검색 결과 불러오기
-    func callSearchResultRequest(keyword: String) {
-        let url = "https://api.themoviedb.org/3/search/movie"
-        let header: HTTPHeaders = [
-            "Authorization": APIKey.tmdbKey,
-        ]
-        let paramters: Parameters = [
-            "query": keyword,
-            "page": currentPage,
-            "language": "kr-Ko"
-        ]
-        
-        AF.request(url, method: .get, parameters: paramters, headers: header).responseDecodable(of: SearchMovie.self) { response in
-            switch response.result {
-            case .success(let value):
-                self.searchMovies = value
-                print("value.total_pages", value.total_pages)
-                print("value.total_results", value.total_results)
-                
-                if value.total_results == 0 {
-                    self.searchBar.text = nil
-                    self.searchBar.placeholder = "No Result"
-                }
-                
-                if self.currentPage == 1 {
-                    self.searchResultsArr = self.searchMovies.results
-                } else {
-                    self.searchResultsArr.append(contentsOf: self.searchMovies.results)
-                }
-                
-                self.collectionView.reloadData()
-                
-                if self.currentPage == 1 {
-                    self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
-                }
-                
-            case.failure(let error):
-                print("\(error)")
-            }
-        }
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -171,7 +122,6 @@ extension SearchMovieViewController: UICollectionViewDelegate, UICollectionViewD
         guard searchResultsArr.isEmpty else {
             let data = searchResultsArr[indexPath.row]
             cell.configureMovieImg(data: data)
-            print(data)
             return cell
         }
         
@@ -184,7 +134,6 @@ extension SearchMovieViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let data = searchResultsArr.isEmpty ? trendingArr[indexPath.item] : searchResultsArr[indexPath.item]
-        // let cell = collectionView.cellForItem(at: indexPath)
         
         let vc = SimilarMovieViewController()
         vc.movie = data
@@ -196,24 +145,32 @@ extension SearchMovieViewController: UICollectionViewDelegate, UICollectionViewD
 extension SearchMovieViewController: UICollectionViewDataSourcePrefetching {
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        for item in indexPaths {
-            if searchResultsArr.count-2 == item.item && searchMovies.page != searchMovies.total_pages {
+        for indexPath in indexPaths {
+            if searchResultsArr.count-2 == indexPath.row && searchMovies.page < searchMovies.totalPages {
                 currentPage += 1
-                callSearchResultRequest(keyword: searchBar.text!)
+                TMDBManager.shared.callSearchResultRequest(keyword: searchBar.text!, currentPage: currentPage) { movie in
+                    self.searchMovies = movie
+                    self.movieSearchLogic(movie: movie)
+                }
             }
         }
     }
     
 }
 
+
 // MARK: - UISearchBar extension
 extension SearchMovieViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchResultsArr.removeAll()
         if let text = searchBar.text {
-            callSearchResultRequest(keyword: text)
+            TMDBManager.shared.callSearchResultRequest(keyword: text, currentPage: currentPage) { movie in
+                self.searchMovies = movie
+                self.movieSearchLogic(movie: movie)
+            }
             if text.trimmingCharacters(in: .whitespaces).isEmpty {
                 searchBar.placeholder = "Please enter at least one character"
+                collectionView.reloadData()
             } else {
                 currentPage = 1
             }
@@ -222,8 +179,28 @@ extension SearchMovieViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
-        print("안녕")
         searchResultsArr.removeAll()
-        callTrendingRequest()
+        collectionView.reloadData()
+    }
+    
+    func movieSearchLogic(movie: SearchMovie) {
+        if movie.totalResults == 0 {
+            self.searchBar.text = nil
+            self.searchBar.placeholder = "No Result"
+            collectionView.reloadData()
+            
+            return
+        }
+        
+        if self.currentPage == 1 {
+            self.searchResultsArr = self.searchMovies.results
+        } else {
+            self.searchResultsArr.append(contentsOf: self.searchMovies.results)
+        }
+        
+        self.collectionView.reloadData()
+        if self.currentPage == 1 {
+            self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
+        }
     }
 }

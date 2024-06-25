@@ -62,7 +62,7 @@ class SimilarTableHeaderView: UITableViewHeaderFooterView {
         sectionLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalTo(self.safeAreaLayoutGuide).inset(15)
-            make.bottom.equalTo(self.safeAreaLayoutGuide).inset(15)
+            make.bottom.equalTo(self.safeAreaLayoutGuide).inset(5)
         }
     }
     

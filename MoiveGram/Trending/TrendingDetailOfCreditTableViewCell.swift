@@ -71,7 +71,7 @@ class TrendingDetailOfCreditTableViewCell: UITableViewCell {
     }
     
     func configureCastCellUI(cast: Cast) {
-        let url = URL(string: "https://image.tmdb.org/t/p/w500" + (cast.profile_path ?? ""))!
+        let url = URL(string: "https://image.tmdb.org/t/p/w500" + (cast.profile ?? ""))!
         DispatchQueue.global().async {
             do {
                 let data = try Data(contentsOf: url)
@@ -91,7 +91,7 @@ class TrendingDetailOfCreditTableViewCell: UITableViewCell {
     }
     
     func configureCrewCellUI(crew: Crew) {
-        let url = URL(string: "https://image.tmdb.org/t/p/w500" + (crew.profile_path ?? ""))!
+        let url = URL(string: "https://image.tmdb.org/t/p/w500" + (crew.profile ?? ""))!
         DispatchQueue.global().async {
             do {
                 let data = try Data(contentsOf: url)

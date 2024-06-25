@@ -242,7 +242,7 @@ class TrendingTableViewCell: UITableViewCell {
     
     /// 테이블뷰 셀 UI 세팅
     func setTableViewCellUI(content: Content, genres: [Genre], credits: [Credit]) {
-        let contentGenre = content.genre_ids.first!
+        let contentGenre = content.genreIds.first!
         let genreArr = genres.filter { $0.id == contentGenre }
         var genreFirst = ""
         var actorsLabelText = ""
@@ -252,9 +252,9 @@ class TrendingTableViewCell: UITableViewCell {
         }
         
         genreLabel.text = "#\(genreFirst)"
-        rateLabel.text = String(format: "%.1f", content.vote_average)
-        releaseDateLabel.text = content.release_date
-        titleLabel.text = content.original_title
+        rateLabel.text = String(format: "%.1f", content.rate)
+        releaseDateLabel.text = content.releaseDate
+        titleLabel.text = content.title
         
         let filterdArr = credits.filter { $0.id == content.id }
         
@@ -272,7 +272,7 @@ class TrendingTableViewCell: UITableViewCell {
             actorsLabel.text = allCast
         }
         
-        let url = URL(string: "https://image.tmdb.org/t/p/w500" + (content.poster_path ?? ""))!
+        let url = URL(string: "https://image.tmdb.org/t/p/w500" + (content.poster ?? ""))!
         
         DispatchQueue.global().async {
             do {

@@ -13,13 +13,24 @@ struct Trending: Decodable {
 
 struct Content: Decodable {
     let id: Int
-    let original_title: String
-    let vote_average: Double
-    let release_date: String
-    let genre_ids: [Int]
-    let backdrop_path: String?
-    let poster_path: String?
+    let title: String
+    let rate: Double
+    let releaseDate: String
+    let genreIds: [Int]
+    let background: String?
+    let poster: String?
     let overview: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case title = "original_title"
+        case rate = "vote_average"
+        case releaseDate = "release_date"
+        case genreIds = "genre_ids"
+        case background = "backdrop_path"
+        case poster = "poster_path"
+        case overview = "overview"
+    }
 }
 
 struct GenreList: Decodable {
@@ -40,44 +51,85 @@ struct Credit: Decodable {
 struct Cast: Decodable {
     let name: String
     let character: String?
-    let profile_path: String?
+    let profile: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case character = "character"
+        case profile = "profile_path"
+    }
 }
 
 struct Crew: Decodable {
     let name: String
     let department: String?
-    let profile_path: String?
+    let profile: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case department = "department"
+        case profile = "profile_path"
+    }
 }
 
 struct SearchMovie: Decodable {
     let page: Int
     let results: [Content]
-    let total_pages: Int
-    let total_results: Int
+    let totalPages: Int
+    let totalResults: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case page = "page"
+        case results = "results"
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
 }
 
 struct SimilarMovies: Decodable {
-    var results: [SimilarMovie]
-    var total_results: Int
+    let results: [SimilarMovie]
+    let totalResults: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case results = "results"
+        case totalResults = "total_results"
+    }
 }
 
 struct SimilarMovie: Decodable {
-    var poster_path: String?
+    let poster: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case poster = "poster_path"
+    }
 }
 
 struct Recommendations: Decodable {
-    var results: [Recommendation]
-    var total_results: Int
+    let results: [Recommendation]
+    let totalResults: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case results = "results"
+        case totalResults = "total_results"
+    }
 }
 
 struct Recommendation: Decodable {
-    var poster_path: String?
+    let poster: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case poster = "poster_path"
+    }
 }
 
 struct Posters: Decodable {
-    var posters: [Poster]
+    let posters: [Poster]
 }
 
 struct Poster: Decodable {
-    var file_path: String?
+    let file: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case file = "file_path"
+    }
 }

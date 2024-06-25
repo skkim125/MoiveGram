@@ -96,8 +96,8 @@ class TrendingDetailViewController: UIViewController {
     }
     
     func configureTrendingDetailViewUI(content: Content) {
-        let bgUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.backdrop_path ?? ""))!
-        let posterUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.poster_path ?? ""))!
+        let bgUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.background ?? ""))!
+        let posterUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.poster ?? ""))!
         DispatchQueue.global().async {
             do {
                 let bgData = try Data(contentsOf: bgUrl)
@@ -112,7 +112,7 @@ class TrendingDetailViewController: UIViewController {
                 print(error)
             }
         }
-        movieTitleLabel.text = content.original_title
+        movieTitleLabel.text = content.title
     }
 }
 
