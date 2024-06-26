@@ -23,6 +23,7 @@ class TrendingViewController: UIViewController {
         return tableView
     }()
     
+    private let tmdbManager = TMDBManager.shared
     var trendingArr: [Content] = []
     var genreList: [Genre] = []
     var credits: [Credit] = []
@@ -32,9 +33,8 @@ class TrendingViewController: UIViewController {
 
         view.backgroundColor = .white
         configureHierarchy()
-        callTrendingRequest()
         configureLayout()
-        callGenreRequest()
+        configureTrendingViewUI()
     }
 
     func configureHierarchy() {
@@ -46,67 +46,39 @@ class TrendingViewController: UIViewController {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-}
-
-// MARK: - Methods
-extension TrendingViewController {
-    /// 이주의 Trending 영화 불러오기 + 장르리스트 & 캐스팅 메서드 호출
-    func callTrendingRequest() {
-        let url = "https://api.themoviedb.org/3/trending/movie/week"
-        let header: HTTPHeaders = [
-            "Authorization": APIKey.tmdbKey,
-            "accept": "application/json"
-        ]
+    
+    func configureTrendingViewUI() {
+        let group = DispatchGroup()
         
-        AF.request(url, method: .get, headers: header).responseDecodable(of: Trending.self) { response in
-            switch response.result {
-            case .success(let value):
-                self.trendingArr = value.results
-                self.callGenreRequest()
-                for i in self.trendingArr {
-                    self.callCastRequest(id: i.id)
+        group.enter()
+        DispatchQueue.global().async(group: group) {
+            self.tmdbManager.callTrendingRequest { datas in
+                self.trendingArr = datas
+                group.leave()
+                
+                group.enter()
+                DispatchQueue.global().async(group: group) {
+                    self.tmdbManager.callGenreRequest { genres in
+                        self.genreList = genres
+                        group.leave()
+                    }
                 }
-                //self.tableView.reloadData()
-            case.failure(let error):
-                print("\(error)")
-            }
-        }
-        
-    }
-    
-    /// 영화 장르 리스트 불러오기
-    func callGenreRequest() {
-        let url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
-        let headers: HTTPHeaders = [
-                "Authorization": APIKey.tmdbKey,
-                "accept": "application/json"
-        ]
-        
-        AF.request(url, method: .get, headers: headers).responseDecodable(of: GenreList.self) { response in
-            switch response.result {
-            case .success(let value):
-                self.genreList = value.genres
-            case.failure(let error):
-                print("\(error)")
-            }
-        }
-    }
-    
-    /// 영화 캐스팅 불러오기
-    func callCastRequest(id: Int) {
-        let url = "https://api.themoviedb.org/3/movie/\(id)/credits?language=kr-Ko"
-        let headers: HTTPHeaders = [
-                "Authorization": APIKey.tmdbKey,
-                "accept": "application/json"
-        ]
-        
-        AF.request(url, method: .get, headers: headers).responseDecodable(of: Credit.self) { response in
-            switch response.result {
-            case .success(let value):
-                self.credits.append(value)
-                self.tableView.reloadData()
-            case.failure(let error):
-                print("\(error)")
+                
+                group.enter()
+                DispatchQueue.global().async(group: group) {
+                    for i in self.trendingArr {
+                        self.tmdbManager.callCastRequest(id: i.id) { credit in
+                            self.credits.append(credit)
+                            
+                        }
+                    }
+                    group.leave()
+                }
+                
+                group.notify(queue: .main) {
+                    self.tableView.reloadData()
+                }
+                
             }
         }
     }
