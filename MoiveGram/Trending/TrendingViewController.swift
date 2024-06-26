@@ -52,13 +52,13 @@ class TrendingViewController: UIViewController {
         
         group.enter()
         DispatchQueue.global().async(group: group) {
-            self.tmdbManager.callTrendingRequest { datas in
+            self.tmdbManager.callTrendingRequest(api: .trending) { datas in
                 self.trendingArr = datas
                 group.leave()
                 
                 group.enter()
                 DispatchQueue.global().async(group: group) {
-                    self.tmdbManager.callGenreRequest { genres in
+                    self.tmdbManager.callGenreRequest(api: .genre) { genres in
                         self.genreList = genres
                         group.leave()
                     }
@@ -66,8 +66,8 @@ class TrendingViewController: UIViewController {
                 
                 group.enter()
                 DispatchQueue.global().async(group: group) {
-                    for i in self.trendingArr {
-                        self.tmdbManager.callCastRequest(id: i.id) { credit in
+                    self.trendingArr.forEach { trend in
+                        self.tmdbManager.callCastRequest(api: .cast(trend.id)) { credit in
                             self.credits.append(credit)
                             
                         }

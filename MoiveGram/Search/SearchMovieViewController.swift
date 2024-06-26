@@ -32,6 +32,7 @@ class SearchMovieViewController: UIViewController {
         return collectionView
     }()
     
+    private let tmdbManager = TMDBManager.shared
     var trendingArr: [Content] = []
     var searchResultsArr: [Content] = []
     var searchMovies: SearchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0)
@@ -53,7 +54,6 @@ class SearchMovieViewController: UIViewController {
     }
     
     func configureHierarchy() {
-        // MARK: addSubView()
         view.addSubview(searchBar)
         view.addSubview(collectionView)
     }
@@ -71,15 +71,9 @@ class SearchMovieViewController: UIViewController {
     }
     
     func getTrending() {
-        DispatchQueue.global().async {
-            TMDBManager.shared.callTrendingRequest { results in
-                DispatchQueue.main.async {
-                    for i in 0...5 {
-                        self.trendingArr.append(results[i])
-                    }
-                    self.collectionView.reloadData()
-                }
-            }
+        tmdbManager.callTrendingRequest(api: .trending) { results in
+            self.trendingArr.append(contentsOf: results[0...5])
+            self.collectionView.reloadData()
         }
     }
 }
@@ -148,7 +142,7 @@ extension SearchMovieViewController: UICollectionViewDataSourcePrefetching {
         for indexPath in indexPaths {
             if searchResultsArr.count-2 == indexPath.row && searchMovies.page < searchMovies.totalPages {
                 currentPage += 1
-                TMDBManager.shared.callSearchResultRequest(keyword: searchBar.text!, currentPage: currentPage) { movie in
+                tmdbManager.callSearchResultRequest(api: .search(searchBar.text!, currentPage)) { movie in
                     self.searchMovies = movie
                     self.movieSearchLogic(movie: movie)
                 }
@@ -164,7 +158,7 @@ extension SearchMovieViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchResultsArr.removeAll()
         if let text = searchBar.text {
-            TMDBManager.shared.callSearchResultRequest(keyword: text, currentPage: currentPage) { movie in
+            tmdbManager.callSearchResultRequest(api: .search(text, currentPage)) { movie in
                 self.searchMovies = movie
                 self.movieSearchLogic(movie: movie)
             }

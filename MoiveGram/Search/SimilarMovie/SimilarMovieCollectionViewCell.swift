@@ -46,22 +46,22 @@ class SimilarMovieCollectionViewCell: UICollectionViewCell {
     func configurePosterView(data: String) {
         let url = URL(string: "https://image.tmdb.org/t/p/original" + data)!
         
-        //        posterView.kf.setImage(with: url)
+        posterView.kf.setImage(with: url)
         
-        DispatchQueue.global(qos: .userInteractive).async {
-            do {
-                let data = try Data(contentsOf: url)
-                let image = UIImage(data: data)
-                DispatchQueue.main.async {
-                    self.posterView.image = image
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.posterView.image = UIImage(systemName: "photo.artframe")
-                    self.posterView.contentMode = .scaleAspectFit
-                }
-            }
-        }
+//        DispatchQueue.global(qos: .userInteractive).async {
+//            do {
+//                let data = try Data(contentsOf: url)
+//                let image = UIImage(data: data)
+//                DispatchQueue.main.async {
+//                    self.posterView.image = image
+//                }
+//            } catch {
+//                DispatchQueue.main.async {
+//                    self.posterView.image = UIImage(systemName: "photo.artframe")
+//                    self.posterView.contentMode = .scaleAspectFit
+//                }
+//            }
+//        }
     }
     
     override func layoutSubviews() {

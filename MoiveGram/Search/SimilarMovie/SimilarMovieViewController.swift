@@ -60,8 +60,8 @@ class SimilarMovieViewController: UIViewController {
         let group = DispatchGroup()
         
         group.enter()
-        DispatchQueue.global().async {
-            self.tmdbManager.requestSimilarMovies(movieID: movie.id) { data in
+        DispatchQueue.global().async(group: group) {
+            self.tmdbManager.requestSimilarMovies(api: .similar(movie.id)) { data in
                 self.moviePosters[0] = data.map { $0.poster ?? "" }
                 
                 group.leave()
@@ -69,17 +69,19 @@ class SimilarMovieViewController: UIViewController {
         }
         
         group.enter()
-        DispatchQueue.global().async {
-            self.tmdbManager.requestRecomendations(movieID: movie.id) { data in
+        DispatchQueue.global().async(group: group) {
+            self.tmdbManager.requestRecomendations(api: .recomandation(movie.id)) { data in
                 self.moviePosters[1] = data.map { $0.poster ?? "" }
+                
                 group.leave()
             }
         }
         
         group.enter()
-        DispatchQueue.global().async {
-            self.tmdbManager.requestPosters(movieID: movie.id) { data in
+        DispatchQueue.global().async(group: group) {
+            self.tmdbManager.requestPosters(api: .posters(movie.id)) { data in
                 self.moviePosters[2] = data.map { $0.file ?? "" }
+                
                 group.leave()
             }
         }
