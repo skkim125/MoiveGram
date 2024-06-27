@@ -17,6 +17,15 @@ class TrendingDetailViewController: UIViewController {
         return imgView
     }()
     
+    lazy var movieTitleBG = {
+       let view = UIView()
+        view.backgroundColor = .black.withAlphaComponent(0.5)
+        view.layer.cornerRadius = 8
+        view.clipsToBounds = true
+        
+        return view
+    }()
+    
     lazy var movieTitleLabel = {
        let label = UILabel()
         label.font = .systemFont(ofSize: 25, weight: .heavy)
@@ -64,7 +73,8 @@ class TrendingDetailViewController: UIViewController {
 
     func configureHierarchy() {
         view.addSubview(movieBGImageView)
-        view.addSubview(movieTitleLabel)
+        view.addSubview(movieTitleBG)
+        movieTitleBG.addSubview(movieTitleLabel)
         view.addSubview(moviePosterImageView)
         view.addSubview(tableView)
     }
@@ -75,15 +85,20 @@ class TrendingDetailViewController: UIViewController {
             make.height.equalTo(240)
         }
         
-        movieTitleLabel.snp.makeConstraints { make in
+        movieTitleBG.snp.makeConstraints { make in
             make.top.equalTo(movieBGImageView.snp.top).inset(24)
-            make.horizontalEdges.equalTo(movieBGImageView.snp.horizontalEdges).inset(20)
+            make.leading.equalTo(movieBGImageView.snp.leading).inset(20)
+            make.trailing.lessThanOrEqualTo(movieBGImageView.snp.trailing).inset(20)
             make.height.equalTo(40)
         }
         
+        movieTitleLabel.snp.makeConstraints { make in
+            make.edges.equalTo(movieTitleBG.snp.edges).inset(5)
+        }
+        
         moviePosterImageView.snp.makeConstraints { make in
-            make.top.equalTo(movieTitleLabel.snp.bottom).offset(8)
-            make.leading.equalTo(movieTitleLabel.snp.leading).offset(4)
+            make.top.equalTo(movieTitleBG.snp.bottom).offset(8)
+            make.leading.equalTo(movieTitleBG.snp.leading).offset(4)
             make.bottom.equalTo(movieBGImageView.snp.bottom).inset(8)
             make.width.equalTo(120)
         }
@@ -98,20 +113,8 @@ class TrendingDetailViewController: UIViewController {
     func configureTrendingDetailViewUI(content: Content) {
         let bgUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.background ?? ""))!
         let posterUrl = URL(string: "https://image.tmdb.org/t/p/original" + (content.poster ?? ""))!
-        DispatchQueue.global().async {
-            do {
-                let bgData = try Data(contentsOf: bgUrl)
-                let posterData = try Data(contentsOf: posterUrl)
-                
-                DispatchQueue.main.async {
-                    self.movieBGImageView.image = UIImage(data: bgData)
-                    self.moviePosterImageView.image = UIImage(data: posterData)
-                }
-                
-            } catch {
-                print(error)
-            }
-        }
+        movieBGImageView.kf.setImage(with: bgUrl)
+        moviePosterImageView.kf.setImage(with: posterUrl)
         movieTitleLabel.text = content.title
     }
 }

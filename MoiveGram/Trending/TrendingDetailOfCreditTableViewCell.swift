@@ -72,42 +72,15 @@ class TrendingDetailOfCreditTableViewCell: UITableViewCell {
     
     func configureCastCellUI(cast: Cast) {
         let url = URL(string: "https://image.tmdb.org/t/p/w500" + (cast.profile ?? ""))!
-        DispatchQueue.global().async {
-            do {
-                let data = try Data(contentsOf: url)
-                
-                DispatchQueue.main.async {
-                    self.castImageView.image = UIImage(data: data)
-                }
-                
-            } catch {
-                DispatchQueue.main.async {
-                    self.castImageView.image = UIImage(systemName: "person.fill")
-                }
-            }
-        }
+        
+        castImageView.kf.setImage(with: url)
         castNameLabel.text = cast.name
         movieCharacterLabel.text = cast.character ?? ""
     }
     
     func configureCrewCellUI(crew: Crew) {
         let url = URL(string: "https://image.tmdb.org/t/p/w500" + (crew.profile ?? ""))!
-        DispatchQueue.global().async {
-            do {
-                let data = try Data(contentsOf: url)
-                
-                DispatchQueue.main.async {
-                    self.castImageView.image = UIImage(data: data)
-                    self.castImageView.contentMode = .scaleAspectFit
-                }
-                
-            } catch {
-                DispatchQueue.main.async {
-                    self.castImageView.image = UIImage(systemName: "camera.fill")
-                    self.castImageView.contentMode = .scaleAspectFit
-                }
-            }
-        }
+        castImageView.kf.setImage(with: url)
         castNameLabel.text = crew.name
         movieCharacterLabel.text = crew.department ?? ""
     }

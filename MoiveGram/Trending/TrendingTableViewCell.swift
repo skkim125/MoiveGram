@@ -14,8 +14,9 @@ class TrendingTableViewCell: UITableViewCell {
     lazy var imageBackView: UIView = {
         let view = UIView()
         view.backgroundColor = .darkGray
-        view.layer.shadowRadius = 5.0
-        view.layer.shadowOpacity = 0.4
+        view.layer.shadowOffset = .zero
+        view.layer.shadowRadius = 3.0
+        view.layer.shadowOpacity = 0.8
         view.layer.cornerRadius = 12
         
         return view
@@ -274,18 +275,7 @@ class TrendingTableViewCell: UITableViewCell {
         
         let url = URL(string: "https://image.tmdb.org/t/p/w500" + (content.poster ?? ""))!
         
-        DispatchQueue.global().async {
-            do {
-                let data = try Data(contentsOf: url)
-                
-                DispatchQueue.main.async {
-                    self.contentImageView.image = UIImage(data: data)
-                }
-                
-            } catch {
-                print(error)
-            }
-        }
+        contentImageView.kf.setImage(with: url)
     }
     
     override func prepareForReuse() {

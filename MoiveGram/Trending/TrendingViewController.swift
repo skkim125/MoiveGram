@@ -32,11 +32,16 @@ class TrendingViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .white
+        configureNavigationBar()
         configureHierarchy()
         configureLayout()
         configureTrendingViewUI()
     }
 
+    func configureNavigationBar() {
+        navigationItem.title = "Weekly Trend"
+    }
+    
     func configureHierarchy() {
         view.addSubview(tableView)
     }
@@ -52,33 +57,36 @@ class TrendingViewController: UIViewController {
         
         group.enter()
         DispatchQueue.global().async(group: group) {
-            self.tmdbManager.callTrendingRequest(api: .trending) { datas in
-                self.trendingArr = datas
-                group.leave()
-                
-                group.enter()
-                DispatchQueue.global().async(group: group) {
-                    self.tmdbManager.callGenreRequest(api: .genre) { genres in
-                        self.genreList = genres
-                        group.leave()
-                    }
-                }
-                
-                group.enter()
-                DispatchQueue.global().async(group: group) {
-                    self.trendingArr.forEach { trend in
-                        self.tmdbManager.callCastRequest(api: .cast(trend.id)) { credit in
-                            self.credits.append(credit)
-                            
-                        }
-                    }
+            self.tmdbManager.callRequestTMDB(api: .genre, type: GenreList.self) { genres in
+                if let genres = genres {
+                    self.genreList = genres.genres
                     group.leave()
                 }
-                
+            }
+        }
+        
+        group.enter()
+        DispatchQueue.global().async(group: group) {
+            self.tmdbManager.callRequestTMDB(api: .trending, type: Trending.self) { trend in
+                if let trend = trend {
+                    self.trendingArr = trend.results
+                    group.leave()
+                    
+                    self.trendingArr.forEach { trend in
+                        group.enter()
+                        DispatchQueue.global().async(group: group) {
+                            self.tmdbManager.callRequestTMDB(api: .cast(trend.id), type: Credit.self) { credit in
+                                if let credit = credit {
+                                    self.credits.append(credit)
+                                }
+                                group.leave()
+                            }
+                        }
+                    }
+                }
                 group.notify(queue: .main) {
                     self.tableView.reloadData()
                 }
-                
             }
         }
     }

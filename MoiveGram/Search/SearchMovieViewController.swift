@@ -71,9 +71,11 @@ class SearchMovieViewController: UIViewController {
     }
     
     func getTrending() {
-        tmdbManager.callTrendingRequest(api: .trending) { results in
-            self.trendingArr.append(contentsOf: results[0...5])
-            self.collectionView.reloadData()
+        tmdbManager.callRequestTMDB(api: .trending, type: Trending.self) { trending in
+            if let trending = trending {
+                self.trendingArr.append(contentsOf: trending.results[0...5])
+                self.collectionView.reloadData()
+            }
         }
     }
 }
@@ -139,12 +141,16 @@ extension SearchMovieViewController: UICollectionViewDelegate, UICollectionViewD
 extension SearchMovieViewController: UICollectionViewDataSourcePrefetching {
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        print(indexPaths)
+//        print(self.searchResultsArr.count)
         for indexPath in indexPaths {
-            if searchResultsArr.count-2 == indexPath.row && searchMovies.page < searchMovies.totalPages {
+            if searchResultsArr.count-1 == indexPath.item && searchMovies.totalResults > searchResultsArr.count {
                 currentPage += 1
-                tmdbManager.callSearchResultRequest(api: .search(searchBar.text!, currentPage)) { movie in
-                    self.searchMovies = movie
-                    self.movieSearchLogic(movie: movie)
+                tmdbManager.callRequestTMDB(api: .search(searchBar.text!, currentPage), type: SearchMovie.self) { movie in
+                    if let movie = movie {
+                        self.searchMovies = movie
+                        self.movieSearchLogic(movie: movie)
+                    }
                 }
             }
         }
@@ -158,10 +164,13 @@ extension SearchMovieViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchResultsArr.removeAll()
         if let text = searchBar.text {
-            tmdbManager.callSearchResultRequest(api: .search(text, currentPage)) { movie in
-                self.searchMovies = movie
-                self.movieSearchLogic(movie: movie)
+            tmdbManager.callRequestTMDB(api: .search(text, currentPage), type: SearchMovie.self) { movie in
+                if let movie = movie  {
+                    self.searchMovies = movie
+                    self.movieSearchLogic(movie: movie)
+                }
             }
+            
             if text.trimmingCharacters(in: .whitespaces).isEmpty {
                 searchBar.placeholder = "Please enter at least one character"
                 collectionView.reloadData()
@@ -191,8 +200,10 @@ extension SearchMovieViewController: UISearchBarDelegate {
         } else {
             self.searchResultsArr.append(contentsOf: self.searchMovies.results)
         }
+        print(self.searchResultsArr.count)
         
         self.collectionView.reloadData()
+        
         if self.currentPage == 1 {
             self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
         }

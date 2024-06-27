@@ -13,7 +13,7 @@ class TabViewController: UITabBarController {
         super.viewDidLoad()
         
         tabBar.tintColor = .white
-        tabBar.backgroundColor = .darkGray
+        tabBar.backgroundColor = .black
         
         let home = UINavigationController(rootViewController: ViewController())
         home.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "house.fill"), tag: 0)

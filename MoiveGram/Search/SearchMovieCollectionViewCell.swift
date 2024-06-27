@@ -40,21 +40,13 @@ class SearchMovieCollectionViewCell: UICollectionViewCell {
     
     /// 컬렉션뷰 셀 UI 세팅 메서드
     func configureMovieImg(data: Content) {
-        let url = URL(string: "https://image.tmdb.org/t/p/original" + (data.poster ?? ""))!
-        
-        DispatchQueue.global(qos: .userInteractive).async {
-            do {
-                let data = try Data(contentsOf: url)
-                DispatchQueue.main.async {
-                    self.imgView.image = UIImage(data: data)
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.imgView.image = UIImage(systemName: "questionmark")
-                    self.imgView.tintColor = .white
-                    self.imgView.backgroundColor = .gray
-                }
-            }
+        if let poster = data.poster {
+            let url = URL(string: "https://image.tmdb.org/t/p/original" + (data.poster ?? ""))!
+            imgView.kf.setImage(with: url)
+        } else {
+            self.imgView.image = UIImage(systemName: "questionmark")
+            self.imgView.tintColor = .white
+            self.imgView.backgroundColor = .gray
         }
     }
     
