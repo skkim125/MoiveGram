@@ -7,8 +7,8 @@
 
 import UIKit
 
-class SearchMovieCollectionViewCell: UICollectionViewCell {
-    lazy var imgView: UIImageView = {
+final class SearchMovieCollectionViewCell: UICollectionViewCell {
+    private let imgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleToFill
         imgView.layer.cornerRadius = SearchMovieConstant.imgCornerRadius
@@ -28,11 +28,11 @@ class SearchMovieCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         contentView.addSubview(imgView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         imgView.snp.makeConstraints { make in
             make.edges.equalTo(safeAreaLayoutGuide)
         }

@@ -11,7 +11,7 @@ struct Trending: Decodable {
     let results: [Content]
 }
 
-struct Content: Decodable {
+struct Content: Hashable, Decodable {
     let id: Int
     let title: String
     let rate: Double
@@ -42,13 +42,13 @@ struct Genre: Decodable {
     let name: String
 }
 
-struct Credit: Decodable {
+struct Credit: Hashable, Decodable {
     let id: Int
     let cast: [Cast]
     let crew: [Crew]
 }
 
-struct Cast: Decodable {
+struct Cast: Hashable, Decodable {
     let name: String
     let character: String?
     let profile: String?
@@ -60,7 +60,7 @@ struct Cast: Decodable {
     }
 }
 
-struct Crew: Decodable {
+struct Crew: Hashable, Decodable {
     let name: String
     let department: String?
     let profile: String?
@@ -131,5 +131,18 @@ struct Poster: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case file = "file_path"
+    }
+}
+
+struct Videos: Hashable, Decodable {
+    let id: Int
+    let results: [Video]
+}
+
+struct Video: Hashable, Decodable {
+    let key: String
+    
+    var link: String {
+        return "https://www.youtube.com/watch?v=" + self.key
     }
 }

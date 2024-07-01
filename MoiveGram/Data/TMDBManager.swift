@@ -8,13 +8,13 @@
 import Foundation
 import Alamofire
 
-class TMDBManager {
+final class TMDBManager {
     static let shared = TMDBManager()
     
     private init() { }
     
-    func callRequestTMDB<T: Decodable>(api: TMDBAPIRequest, type: T.Type, completionHandler: @escaping (T?) -> ()) {
-        AF.request(api.endPoint, parameters: api.parameter, headers: api.headers).responseDecodable(of: T.self) { response in
+    func callRequestAfTMDB<T: Decodable>(api: TMDBAPIRequest, type: T.Type, completionHandler: @escaping (T?) -> ()) {
+        AF.request(api.fullURL, parameters: api.parameter, headers: api.headers).responseDecodable(of: T.self) { response in
             switch response.result {
             case .success(let value):
                 

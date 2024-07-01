@@ -9,15 +9,15 @@ import UIKit
 import Kingfisher
 import SnapKit
 
-class TrendingDetailViewController: UIViewController {
+final class TrendingDetailViewController: UIViewController {
     
-    lazy var movieBGImageView = {
+    private let movieBGImageView = {
        let imgView = UIImageView()
         
         return imgView
     }()
     
-    lazy var movieTitleBG = {
+    private let movieTitleBG = {
        let view = UIView()
         view.backgroundColor = .black.withAlphaComponent(0.5)
         view.layer.cornerRadius = 8
@@ -26,7 +26,7 @@ class TrendingDetailViewController: UIViewController {
         return view
     }()
     
-    lazy var movieTitleLabel = {
+    private let movieTitleLabel = {
        let label = UILabel()
         label.font = .systemFont(ofSize: 25, weight: .heavy)
         label.textColor = .white
@@ -35,7 +35,7 @@ class TrendingDetailViewController: UIViewController {
         return label
     }()
     
-    lazy var moviePosterImageView = {
+    private let moviePosterImageView = {
        let imgView = UIImageView()
         imgView.backgroundColor = .white
         imgView.layer.shadowOffset = .zero
@@ -47,7 +47,7 @@ class TrendingDetailViewController: UIViewController {
         return imgView
     }()
     
-    lazy var tableView = {
+    private lazy var tableView = {
         let tv = UITableView()
         tv.delegate = self
         tv.dataSource = self
@@ -60,18 +60,35 @@ class TrendingDetailViewController: UIViewController {
     
     var content: Content?
     var credits: Credit?
+    var video: Video?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
-        navigationItem.title = "출연/제작"
         
+        configureNavigationBar()
         configureHierarchy()
         configureLayout()
     }
+    
+    private func configureNavigationBar() {
+        navigationItem.title = "출연/제작"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "play.rectangle.fill"), style: .plain, target: self, action: #selector(goTrailerPlayer))
+    }
+    
+    @objc func goTrailerPlayer() {
+        guard let video = self.video else { return }
+        let vc = TrendingTrailerWebView()
+        vc.configureWebView(link: video.link)
+        
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        
+        present(nav, animated: true)
+    }
 
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(movieBGImageView)
         view.addSubview(movieTitleBG)
         movieTitleBG.addSubview(movieTitleLabel)
@@ -79,7 +96,7 @@ class TrendingDetailViewController: UIViewController {
         view.addSubview(tableView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         movieBGImageView.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(240)

@@ -9,9 +9,9 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-class TrendingTableViewCell: UITableViewCell {
+final class TrendingTableViewCell: UITableViewCell {
     
-    lazy var imageBackView: UIView = {
+    private let imageBackView: UIView = {
         let view = UIView()
         view.backgroundColor = .darkGray
         view.layer.shadowOffset = .zero
@@ -22,7 +22,7 @@ class TrendingTableViewCell: UITableViewCell {
         return view
     }()
     
-    lazy var releaseDateLabel: UILabel = {
+    private let releaseDateLabel: UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
         label.font = .systemFont(ofSize: 14)
@@ -30,7 +30,7 @@ class TrendingTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var genreLabel: UILabel = {
+    private let genreLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = .systemFont(ofSize: 18, weight: .semibold)
@@ -39,7 +39,7 @@ class TrendingTableViewCell: UITableViewCell {
     }()
     
     
-    lazy var contentImageView: UIImageView = {
+    private let contentImageView: UIImageView = {
        let imgView = UIImageView()
         imgView.contentMode = .scaleToFill
         imgView.layer.cornerRadius = 12
@@ -48,7 +48,7 @@ class TrendingTableViewCell: UITableViewCell {
         return imgView
     }()
     
-    lazy var rateStackView: UIStackView = {
+    private lazy var rateStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [rateInfoLabel, rateLabel])
         sv.spacing = 0
         sv.layer.shadowOpacity = 0.4
@@ -57,7 +57,7 @@ class TrendingTableViewCell: UITableViewCell {
         return sv
     }()
     
-    lazy var rateInfoLabel: UILabel = {
+    private let rateInfoLabel: UILabel = {
         let label = UILabel()
         label.text = "평점"
         label.font = .systemFont(ofSize: 14)
@@ -68,7 +68,7 @@ class TrendingTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var rateLabel: UILabel = {
+    private let rateLabel: UILabel = {
        let label = UILabel()
         label.font = .systemFont(ofSize: 14)
         label.textColor = .black
@@ -78,7 +78,7 @@ class TrendingTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var infoLabelBackView: UIView = {
+    private let infoLabelBackView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
@@ -88,7 +88,7 @@ class TrendingTableViewCell: UITableViewCell {
         return view
     }()
     
-    lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
        let label = UILabel()
         label.textColor = .black
         label.font = .systemFont(ofSize: 17, weight: .medium)
@@ -96,7 +96,7 @@ class TrendingTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var actorsLabel: UILabel =  {
+    private let actorsLabel: UILabel =  {
         let label = UILabel()
         label.textColor = .darkGray
         label.font = .systemFont(ofSize: 14)
@@ -104,7 +104,7 @@ class TrendingTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var dividerView: UIView = {
+    private let dividerView: UIView = {
         let view = UIView()
         view.backgroundColor = .darkGray
         
@@ -117,7 +117,7 @@ class TrendingTableViewCell: UITableViewCell {
         return sv
     }()
     
-    lazy var moreLabel: UILabel = {
+    private let moreLabel: UILabel = {
        let label = UILabel()
         label.text = "자세히 보기"
         label.textColor = .black
@@ -126,13 +126,11 @@ class TrendingTableViewCell: UITableViewCell {
         return label
     }()
     
-    
-    lazy var chevronImgView: UIImageView = {
+    private let chevronImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(systemName: "chevron.right")
         imgView.tintColor = .darkGray
         imgView.contentMode = .scaleAspectFit
-        
         
         return imgView
     }()
@@ -145,7 +143,7 @@ class TrendingTableViewCell: UITableViewCell {
         configureLayout()
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         contentView.addSubview(releaseDateLabel)
         contentView.addSubview(genreLabel)
         contentView.addSubview(imageBackView)
@@ -158,7 +156,7 @@ class TrendingTableViewCell: UITableViewCell {
         contentView.addSubview(moreStackView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         releaseDateLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView.safeAreaLayoutGuide).offset(8)
             make.leading.equalTo(contentView.safeAreaLayoutGuide).offset(16)
@@ -236,13 +234,12 @@ class TrendingTableViewCell: UITableViewCell {
         
     }
     
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     /// 테이블뷰 셀 UI 세팅
-    func setTableViewCellUI(content: Content, genres: [Genre], credits: [Credit]) {
+    func setTableViewCellUI(content: Content, genres: [Genre], credits: Credit) {
         let contentGenre = content.genreIds.first!
         let genreArr = genres.filter { $0.id == contentGenre }
         var genreFirst = ""
@@ -257,16 +254,13 @@ class TrendingTableViewCell: UITableViewCell {
         releaseDateLabel.text = content.releaseDate
         titleLabel.text = content.title
         
-        let filterdArr = credits.filter { $0.id == content.id }
         
-        filterdArr.forEach { credit in
-            let allCast = credit.cast.reduce("") { _ , cast in
-                actorsLabelText.append("\(cast.name), ")
+        credits.cast.forEach { cast in
+            let allCast = cast.name.reduce("") { _ , name in
+                actorsLabelText.append("\(name), ")
                 
-                if cast.name == credit.cast.last!.name {
-                    actorsLabelText.removeLast()
-                    actorsLabelText.removeLast()
-                }
+                actorsLabelText.removeLast()
+                actorsLabelText.removeLast()
                 return actorsLabelText
             }
             

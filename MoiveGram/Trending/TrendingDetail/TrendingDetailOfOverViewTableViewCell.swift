@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-class TrendingDetailOfOverViewTableViewCell: UITableViewCell {
+final class TrendingDetailOfOverViewTableViewCell: UITableViewCell {
     
-    lazy var overViewLabel = {
+    private let overViewLabel = {
         let label = UILabel()
         label.text = ""
         label.numberOfLines = 2
@@ -18,10 +18,9 @@ class TrendingDetailOfOverViewTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var extensionButton = {
+    private let extensionButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
-        button.addTarget(self, action: #selector(extensionButtonTapped), for: .touchUpInside)
         button.tintColor = .black
         
         return button
@@ -34,18 +33,19 @@ class TrendingDetailOfOverViewTableViewCell: UITableViewCell {
         
         configureHierarchy()
         configureLayout()
+        extensionButtonAddTarget()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         contentView.addSubview(overViewLabel)
         contentView.addSubview(extensionButton)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         overViewLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView.safeAreaLayoutGuide).offset(12)
             make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(28)
@@ -63,7 +63,11 @@ class TrendingDetailOfOverViewTableViewCell: UITableViewCell {
         overViewLabel.text = content.overview
     }
     
-    @objc func extensionButtonTapped() {
+    private func extensionButtonAddTarget() {
+        extensionButton.addTarget(self, action: #selector(extensionButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func extensionButtonTapped() {
         isExtension.toggle()
         extensionButton.setImage(UIImage(systemName: isExtension ? "chevron.up" : "chevron.down"), for: .normal)
         overViewLabel.numberOfLines = isExtension ? 0 : 2

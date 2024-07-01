@@ -7,9 +7,9 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+final class HomeViewController: UIViewController {
     
-    let mainImageView: UIImageView = {
+    private let mainImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "극한직업")
         view.backgroundColor = .lightGray
@@ -20,7 +20,7 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    let subImageView1: UIImageView = {
+    private let subImageView1: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "명량")
         view.backgroundColor = .blue
@@ -31,7 +31,7 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    let subImageView2: UIImageView = {
+    private let subImageView2: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "도둑들")
         view.backgroundColor = .black
@@ -42,7 +42,7 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    let subImageView3: UIImageView = {
+    private let subImageView3: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "베테랑")
         view.backgroundColor = .red
@@ -53,7 +53,7 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    let nowHotContentsLabel: UILabel = {
+    private let nowHotContentsLabel: UILabel = {
         let view = UILabel()
         view.layer.cornerRadius = 8
         view.text = "지금 뜨는 콘텐츠"
@@ -63,7 +63,7 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    let watchButton: UIButton = {
+    private let watchButton: UIButton = {
         let view = UIButton()
         view.backgroundColor = .white
         view.layer.cornerRadius = 8
@@ -76,7 +76,7 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    let saveButton: UIButton = {
+    private let saveButton: UIButton = {
         let view = UIButton()
         view.backgroundColor = .darkGray
         view.layer.cornerRadius = 8
@@ -89,23 +89,26 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .black
+
+        configureNavigationBar()
+        configureHierarchy()
+        configureLayout()
+    }
+    
+    private func configureNavigationBar() {
         navigationItem.title = "Harvey님"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = .white
-        
-        configureHierarchy()
-        configureLayout()
     }
 
     
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         let viewArray = [mainImageView, subImageView1, subImageView2, subImageView3, nowHotContentsLabel, watchButton, saveButton]
         
         for item in viewArray {
@@ -113,7 +116,7 @@ class HomeViewController: UIViewController {
         }
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         mainImageView.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(view.safeAreaLayoutGuide)
@@ -164,7 +167,4 @@ class HomeViewController: UIViewController {
         }
         
     }
-    
-    
-    
 }

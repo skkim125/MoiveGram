@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class LoginViewTextField: UITextField {
+final class LoginViewTextField: UITextField {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,9 +28,9 @@ class LoginViewTextField: UITextField {
     }
 }
 
-class SimilarTableHeaderView: UITableViewHeaderFooterView {
+final class SimilarTableHeaderView: UITableViewHeaderFooterView {
     
-    lazy var sectionLabel = {
+    private let sectionLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 25, weight: .heavy)
         
@@ -54,11 +54,11 @@ class SimilarTableHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         addSubview(sectionLabel)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         sectionLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalTo(self.safeAreaLayoutGuide).inset(15)

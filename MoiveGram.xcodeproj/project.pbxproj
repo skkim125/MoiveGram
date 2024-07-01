@@ -29,6 +29,7 @@
 		04DEC2532C196CA600AAD523 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DEC2522C196CA600AAD523 /* Enums.swift */; };
 		04DEC2552C197A1A00AAD523 /* TrendingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DEC2542C197A1A00AAD523 /* TrendingDetailViewController.swift */; };
 		04DEC2592C198FE500AAD523 /* TrendingDetailOfOverViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DEC2582C198FE500AAD523 /* TrendingDetailOfOverViewTableViewCell.swift */; };
+		04E888622C3293F4000A3FA1 /* TrendingTrailerWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E888612C3293F4000A3FA1 /* TrendingTrailerWebView.swift */; };
 		04FCEF5A2C0EF71C00FB09B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEF592C0EF71C00FB09B1 /* AppDelegate.swift */; };
 		04FCEF5C2C0EF71C00FB09B1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEF5B2C0EF71C00FB09B1 /* SceneDelegate.swift */; };
 		04FCEF5E2C0EF71C00FB09B1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCEF5D2C0EF71C00FB09B1 /* ViewController.swift */; };
@@ -58,6 +59,7 @@
 		04DEC2522C196CA600AAD523 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		04DEC2542C197A1A00AAD523 /* TrendingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingDetailViewController.swift; sourceTree = "<group>"; };
 		04DEC2582C198FE500AAD523 /* TrendingDetailOfOverViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingDetailOfOverViewTableViewCell.swift; sourceTree = "<group>"; };
+		04E888612C3293F4000A3FA1 /* TrendingTrailerWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingTrailerWebView.swift; sourceTree = "<group>"; };
 		04FCEF562C0EF71C00FB09B1 /* MoiveGram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoiveGram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04FCEF592C0EF71C00FB09B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04FCEF5B2C0EF71C00FB09B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -88,9 +90,7 @@
 			children = (
 				0434F4022C16C87E0079438F /* TrendingViewController.swift */,
 				0434F4062C16D56E0079438F /* TrendingTableViewCell.swift */,
-				04DEC2542C197A1A00AAD523 /* TrendingDetailViewController.swift */,
-				04DEC2582C198FE500AAD523 /* TrendingDetailOfOverViewTableViewCell.swift */,
-				04C40C912C28490100052A82 /* TrendingDetailOfCreditTableViewCell.swift */,
+				04E888632C3293F9000A3FA1 /* TrendingDetail */,
 			);
 			path = Trending;
 			sourceTree = "<group>";
@@ -118,8 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				0434F4042C16D1800079438F /* TMDB.swift */,
-				04C40CC12C2998D500052A82 /* TMDBManager.swift */,
 				047629D62C2BDD75008C18E2 /* TMDBRequest.swift */,
+				04C40CC12C2998D500052A82 /* TMDBManager.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -132,6 +132,17 @@
 				04C40CC32C29A65700052A82 /* SimilarMovieCollectionViewCell.swift */,
 			);
 			path = SimilarMovie;
+			sourceTree = "<group>";
+		};
+		04E888632C3293F9000A3FA1 /* TrendingDetail */ = {
+			isa = PBXGroup;
+			children = (
+				04DEC2542C197A1A00AAD523 /* TrendingDetailViewController.swift */,
+				04DEC2582C198FE500AAD523 /* TrendingDetailOfOverViewTableViewCell.swift */,
+				04C40C912C28490100052A82 /* TrendingDetailOfCreditTableViewCell.swift */,
+				04E888612C3293F4000A3FA1 /* TrendingTrailerWebView.swift */,
+			);
+			path = TrendingDetail;
 			sourceTree = "<group>";
 		};
 		04FCEF4D2C0EF71C00FB09B1 = {
@@ -255,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04E888622C3293F4000A3FA1 /* TrendingTrailerWebView.swift in Sources */,
 				04FCEF5E2C0EF71C00FB09B1 /* ViewController.swift in Sources */,
 				04FCEF5A2C0EF71C00FB09B1 /* AppDelegate.swift in Sources */,
 				04C40CC22C2998D500052A82 /* TMDBManager.swift in Sources */,

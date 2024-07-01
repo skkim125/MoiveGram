@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-class TrendingDetailOfCreditTableViewCell: UITableViewCell {
+final class TrendingDetailOfCreditTableViewCell: UITableViewCell {
     
-    lazy var castImageView = {
+    private let castImageView = {
        let imgView = UIImageView()
         imgView.layer.cornerRadius = 5
         imgView.backgroundColor = .lightGray
@@ -19,13 +19,9 @@ class TrendingDetailOfCreditTableViewCell: UITableViewCell {
         return imgView
     }()
     
-    lazy var castNameLabel = {
-        let label = UILabel()
-        
-        return label
-    }()
+    private let castNameLabel = UILabel()
     
-    lazy var movieCharacterLabel = {
+    private let movieCharacterLabel = {
         let label = UILabel()
         label.textColor = .lightGray
         
@@ -43,14 +39,14 @@ class TrendingDetailOfCreditTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         // MARK: addSubView()
         contentView.addSubview(castImageView)
         contentView.addSubview(castNameLabel)
         contentView.addSubview(movieCharacterLabel)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         castImageView.snp.makeConstraints { make in
             make.verticalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(10)
             make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(20)

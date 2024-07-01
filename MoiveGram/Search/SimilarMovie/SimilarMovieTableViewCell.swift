@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class SimilarMovieTableViewCell: UITableViewCell {
+final class SimilarMovieTableViewCell: UITableViewCell {
     lazy var collectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         cv.showsHorizontalScrollIndicator = false
@@ -17,7 +17,7 @@ class SimilarMovieTableViewCell: UITableViewCell {
         return cv
     }()
     
-    func collectionViewLayout() -> UICollectionViewLayout {
+    private func collectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
         let cellSpacing: CGFloat = 5
         layout.minimumInteritemSpacing = cellSpacing
@@ -38,11 +38,11 @@ class SimilarMovieTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         contentView.addSubview(collectionView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         collectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(5)
         }

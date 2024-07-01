@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController {
-    let appTitleLabel: UILabel = {
+final class ViewController: UIViewController {
+    private let appTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "MovieGram"
         label.textColor = .red
@@ -19,7 +19,7 @@ class ViewController: UIViewController {
         return label
     }()
     
-    let idTextField: UITextField = {
+    private let idTextField: UITextField = {
         let tf = LoginViewTextField()
         tf.setupTF(placeholder: LoginViewTFConstant.placeholder.id.rawValue)
         // NSAttributedString: 문자열에 관련된 속성(폰트, 문자 사이의 간격 등등)을 커스텀할 때 사용
@@ -27,28 +27,28 @@ class ViewController: UIViewController {
         return tf
     }()
     
-    let passwordTextField: UITextField = {
+    private let passwordTextField: UITextField = {
         let tf = LoginViewTextField()
         tf.setupTF(placeholder: LoginViewTFConstant.placeholder.password.rawValue)
         
         return tf
     }()
     
-    let nicknameTextField: UITextField = {
+    private let nicknameTextField: UITextField = {
         let tf = LoginViewTextField()
         tf.setupTF(placeholder: LoginViewTFConstant.placeholder.nickname.rawValue)
         
         return tf
     }()
     
-    let countryTextField: UITextField = {
+    private let countryTextField: UITextField = {
         let tf = LoginViewTextField()
         tf.setupTF(placeholder: LoginViewTFConstant.placeholder.country.rawValue)
         
         return tf
     }()
     
-    let recommandCodeTextField: UITextField = {
+    private let recommandCodeTextField: UITextField = {
         let tf = LoginViewTextField()
         tf.setupTF(placeholder: LoginViewTFConstant.placeholder.recommandCode.rawValue)
         
@@ -56,21 +56,20 @@ class ViewController: UIViewController {
     }()
     
     // let vs lazy var -> self 노란색 경고창 + UILifeCycle
-    lazy var joinButton: UIButton = {
+    private let joinButton: UIButton = {
         let button = UIButton()
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 18)
         button.backgroundColor = .white
         button.layer.cornerRadius = 8
-        button.addTarget(self, action: #selector(goHomeView), for: .touchUpInside)
         
-        let b = ViewController.self // Meta Type
+        // let b = ViewController.self // Meta Type
         
         return button
     }()
     
-    let addUserInfoButton: UIButton = {
+    private let addUserInfoButton: UIButton = {
         let button = UIButton()
         button.setTitle("추가정보 입력", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -79,7 +78,7 @@ class ViewController: UIViewController {
         return button
     }()
     
-    let switchButton: UISwitch = {
+    private let switchButton: UISwitch = {
         let sw = UISwitch()
         sw.onTintColor = .red
         
@@ -94,11 +93,11 @@ class ViewController: UIViewController {
         
         configureHierarchy()
         configureLayout()
-        // self.joinButton.addTarget(self, action: #selector(goHomeView), for: .touchUpInside)
+        joinButtonAddTarget()
     }
 
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(appTitleLabel)
         view.addSubview(idTextField)
         view.addSubview(passwordTextField)
@@ -110,7 +109,7 @@ class ViewController: UIViewController {
         view.addSubview(switchButton)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         appTitleLabel.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
@@ -170,8 +169,12 @@ class ViewController: UIViewController {
         }
     }
     
+    private func joinButtonAddTarget() {
+        joinButton.addTarget(self, action: #selector(goHomeView), for: .touchUpInside)
+    }
     
-    @objc func goHomeView() {
+    
+    @objc private  func goHomeView() {
         print(#function)
         let vc = HomeViewController()
         

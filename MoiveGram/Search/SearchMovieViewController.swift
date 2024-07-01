@@ -10,8 +10,8 @@ import Alamofire
 import Kingfisher
 import SnapKit
 
-class SearchMovieViewController: UIViewController {
-    lazy var searchBar: UISearchBar = {
+final class SearchMovieViewController: UIViewController {
+    private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
@@ -20,7 +20,7 @@ class SearchMovieViewController: UIViewController {
         
         return searchBar
     }()
-    lazy var collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -33,32 +33,33 @@ class SearchMovieViewController: UIViewController {
     }()
     
     private let tmdbManager = TMDBManager.shared
-    var trendingArr: [Content] = []
-    var searchResultsArr: [Content] = []
-    var searchMovies: SearchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0)
-    var currentPage = 1
+    private var trendingArr: [Content] = []
+    private var searchResultsArr: [Content] = []
+    private var searchMovies: SearchMovie = SearchMovie(page: 0, results: [], totalPages: 0, totalResults: 0)
+    private var currentPage = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureView()
+        view.backgroundColor = .black
+        
+        configureNavigationBar()
         configureHierarchy()
         configureLayout()
         getTrending()
     }
     
-    func configureView() {
-        view.backgroundColor = .black
+    private func configureNavigationBar() {
         navigationItem.title = "Search Movie"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(searchBar)
         view.addSubview(collectionView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         searchBar.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(40)
@@ -70,8 +71,8 @@ class SearchMovieViewController: UIViewController {
         }
     }
     
-    func getTrending() {
-        tmdbManager.callRequestTMDB(api: .trending, type: Trending.self) { trending in
+    private func getTrending() {
+        tmdbManager.callRequestAfTMDB(api: .trending, type: Trending.self) { trending in
             if let trending = trending {
                 self.trendingArr.append(contentsOf: trending.results[0...5])
                 self.collectionView.reloadData()
@@ -142,11 +143,10 @@ extension SearchMovieViewController: UICollectionViewDataSourcePrefetching {
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         print(indexPaths)
-//        print(self.searchResultsArr.count)
         for indexPath in indexPaths {
             if searchResultsArr.count-1 == indexPath.item && searchMovies.totalResults > searchResultsArr.count {
                 currentPage += 1
-                tmdbManager.callRequestTMDB(api: .search(searchBar.text!, currentPage), type: SearchMovie.self) { movie in
+                tmdbManager.callRequestAfTMDB(api: .search(searchBar.text!, currentPage), type: SearchMovie.self) { movie in
                     if let movie = movie {
                         self.searchMovies = movie
                         self.movieSearchLogic(movie: movie)
@@ -164,7 +164,7 @@ extension SearchMovieViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchResultsArr.removeAll()
         if let text = searchBar.text {
-            tmdbManager.callRequestTMDB(api: .search(text, currentPage), type: SearchMovie.self) { movie in
+            tmdbManager.callRequestAfTMDB(api: .search(text, currentPage), type: SearchMovie.self) { movie in
                 if let movie = movie  {
                     self.searchMovies = movie
                     self.movieSearchLogic(movie: movie)
@@ -186,7 +186,7 @@ extension SearchMovieViewController: UISearchBarDelegate {
         collectionView.reloadData()
     }
     
-    func movieSearchLogic(movie: SearchMovie) {
+    private func movieSearchLogic(movie: SearchMovie) {
         if movie.totalResults == 0 {
             self.searchBar.text = nil
             self.searchBar.placeholder = "No Result"

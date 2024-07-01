@@ -9,9 +9,9 @@ import UIKit
 import Alamofire
 import SnapKit
 
-class TrendingViewController: UIViewController {
+final class TrendingViewController: UIViewController {
     
-    lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
         tableView.register(TrendingTableViewCell.self, forCellReuseIdentifier: TrendingTableViewCell.id)
@@ -24,40 +24,42 @@ class TrendingViewController: UIViewController {
     }()
     
     private let tmdbManager = TMDBManager.shared
-    var trendingArr: [Content] = []
-    var genreList: [Genre] = []
-    var credits: [Credit] = []
+    private var trendingArr: [Content] = []
+    private var credits: [Int: Credit] = [:]
+    private var videos: [Int: Videos] = [:]
+    private var genreList: [Genre] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
+        
         configureNavigationBar()
         configureHierarchy()
         configureLayout()
         configureTrendingViewUI()
     }
 
-    func configureNavigationBar() {
+    private func configureNavigationBar() {
         navigationItem.title = "Weekly Trend"
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(tableView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
-    func configureTrendingViewUI() {
+    private func configureTrendingViewUI() {
         let group = DispatchGroup()
         
         group.enter()
         DispatchQueue.global().async(group: group) {
-            self.tmdbManager.callRequestTMDB(api: .genre, type: GenreList.self) { genres in
+            self.tmdbManager.callRequestAfTMDB(api: .genre, type: GenreList.self) { genres in
                 if let genres = genres {
                     self.genreList = genres.genres
                     group.leave()
@@ -67,19 +69,33 @@ class TrendingViewController: UIViewController {
         
         group.enter()
         DispatchQueue.global().async(group: group) {
-            self.tmdbManager.callRequestTMDB(api: .trending, type: Trending.self) { trend in
-                if let trend = trend {
-                    self.trendingArr = trend.results
+            self.tmdbManager.callRequestAfTMDB(api: .trending, type: Trending.self) { trend in
+                if let t = trend {
+                    self.trendingArr = t.results
                     group.leave()
                     
                     self.trendingArr.forEach { trend in
                         group.enter()
                         DispatchQueue.global().async(group: group) {
-                            self.tmdbManager.callRequestTMDB(api: .cast(trend.id), type: Credit.self) { credit in
+                            self.tmdbManager.callRequestAfTMDB(api: .cast(trend.id), type: Credit.self) { credit in
                                 if let credit = credit {
-                                    self.credits.append(credit)
+                                    if trend.id == credit.id {
+                                        self.credits.updateValue(credit, forKey: trend.id)
+                                    }
                                 }
                                 group.leave()
+                            }
+                            
+                            group.enter()
+                            DispatchQueue.global().async(group: group) {
+                                self.tmdbManager.callRequestAfTMDB(api: .videos(trend.id), type: Videos.self) { videos in
+                                    if let videoArr = videos {
+                                        if trend.id == videoArr.id {
+                                            self.videos.updateValue(videoArr, forKey: trend.id)
+                                        }
+                                    }
+                                    group.leave()
+                                }
                             }
                         }
                     }
@@ -103,7 +119,9 @@ extension TrendingViewController: UITableViewDelegate, UITableViewDataSource {
         let dataidx = indexPath.row
         let data = trendingArr[dataidx]
         
-        cell.setTableViewCellUI(content: data, genres: genreList, credits: credits)
+        if let credit = credits[data.id] {
+            cell.setTableViewCellUI(content: data, genres: genreList, credits: credit)
+        }
         cell.selectionStyle = .none
         
         return cell
@@ -115,7 +133,10 @@ extension TrendingViewController: UITableViewDelegate, UITableViewDataSource {
         
         let vc = TrendingDetailViewController()
         vc.content = data
-        vc.credits = credits[indexPath.row]
+        vc.credits = credits[data.id]
+        if let video = videos[data.id], let first = video.results.first {
+            vc.video = first
+        }
         vc.configureTrendingDetailViewUI(content: data)
         
         navigationController?.pushViewController(vc, animated: true)

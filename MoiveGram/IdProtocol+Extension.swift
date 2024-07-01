@@ -11,20 +11,7 @@ protocol IdProtocol {
     static var id: String { get }
 }
 
-extension UITableViewCell: IdProtocol {
-    static var id: String {
-        String(describing: self)
-    }
-}
-
-extension UITableViewHeaderFooterView: IdProtocol {
-    static var id: String {
-        String(describing: self)
-    }
-}
-
-
-extension UICollectionViewCell: IdProtocol {
+extension UIView: IdProtocol {
     static var id: String {
         String(describing: self)
     }

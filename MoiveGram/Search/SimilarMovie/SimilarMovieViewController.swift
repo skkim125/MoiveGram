@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-class SimilarMovieViewController: UIViewController {
+final class SimilarMovieViewController: UIViewController {
     
-    lazy var tableView = {
+    private lazy var tableView = {
         let tv = UITableView()
         tv.delegate = self
         tv.dataSource = self
@@ -37,23 +37,23 @@ class SimilarMovieViewController: UIViewController {
         
     }
     
-    func configureNavigationBar(movie: Content) {
+    private func configureNavigationBar(movie: Content) {
         navigationItem.title = movie.title
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(tableView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
-    func requestMovie() {
+    private func requestMovie() {
         guard let movie = self.movie else { return }
         configureNavigationBar(movie: movie)
         
@@ -61,7 +61,7 @@ class SimilarMovieViewController: UIViewController {
         
         group.enter()
         DispatchQueue.global().async(group: group) {
-            self.tmdbManager.callRequestTMDB(api: .similar(movie.id), type: SimilarMovies.self) {
+            self.tmdbManager.callRequestAfTMDB(api: .similar(movie.id), type: SimilarMovies.self) {
                 if let similars = $0.self {
                     self.moviePosters[0] = similars.results.map { $0.poster ?? "" }
                 }
@@ -71,7 +71,7 @@ class SimilarMovieViewController: UIViewController {
         
         group.enter()
         DispatchQueue.global().async(group: group) {
-            self.tmdbManager.callRequestTMDB(api: .recomandation(movie.id), type: Recommendations.self) {
+            self.tmdbManager.callRequestAfTMDB(api: .recomandation(movie.id), type: Recommendations.self) {
                 if let recomandations = $0.self {
                     self.moviePosters[1] = recomandations.results.map { $0.poster ?? "" }
                 }
@@ -81,7 +81,7 @@ class SimilarMovieViewController: UIViewController {
         
         group.enter()
         DispatchQueue.global().async(group: group) {
-            self.tmdbManager.callRequestTMDB(api: .posters(movie.id), type: Posters.self) {
+            self.tmdbManager.callRequestAfTMDB(api: .posters(movie.id), type: Posters.self) {
                 if let posters = $0.self {
                     self.moviePosters[2] = posters.posters.map { $0.file ?? "" }
                 }

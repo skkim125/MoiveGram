@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-class SimilarMovieCollectionViewCell: UICollectionViewCell {
+final class SimilarMovieCollectionViewCell: UICollectionViewCell {
     
-    lazy var posterView = {
+    private let posterView = {
         let imgView = UIImageView()
         imgView.image = nil
         imgView.contentMode = .scaleAspectFill
@@ -32,11 +32,11 @@ class SimilarMovieCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         contentView.addSubview(posterView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         
         posterView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(5)
@@ -47,21 +47,6 @@ class SimilarMovieCollectionViewCell: UICollectionViewCell {
         let url = URL(string: "https://image.tmdb.org/t/p/original" + data)!
         
         posterView.kf.setImage(with: url)
-        
-//        DispatchQueue.global(qos: .userInteractive).async {
-//            do {
-//                let data = try Data(contentsOf: url)
-//                let image = UIImage(data: data)
-//                DispatchQueue.main.async {
-//                    self.posterView.image = image
-//                }
-//            } catch {
-//                DispatchQueue.main.async {
-//                    self.posterView.image = UIImage(systemName: "photo.artframe")
-//                    self.posterView.contentMode = .scaleAspectFit
-//                }
-//            }
-//        }
     }
     
     override func layoutSubviews() {
