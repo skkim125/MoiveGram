@@ -134,7 +134,7 @@ extension TrendingViewController: UITableViewDelegate, UITableViewDataSource {
         let vc = TrendingDetailViewController()
         vc.content = data
         vc.credits = credits[data.id]
-        if let video = videos[data.id], let first = video.results.first {
+        if let video = videos[data.id], let first = video.results.filter({ $0.site == "YouTube"}).first {
             vc.video = first
         }
         vc.configureTrendingDetailViewUI(content: data)

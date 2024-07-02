@@ -78,7 +78,16 @@ final class TrendingDetailViewController: UIViewController {
     }
     
     @objc func goTrailerPlayer() {
-        guard let video = self.video else { return }
+        guard let video = self.video else {
+            let alert = UIAlertController(title: "제공되는 영상이 없습니다.", message: nil, preferredStyle: .alert)
+            let cancel = UIAlertAction(title: "확인", style: .cancel)
+            alert.addAction(cancel)
+            
+            present(alert, animated: true)
+            
+            return
+        }
+        
         let vc = TrendingTrailerWebView()
         vc.configureWebView(link: video.link)
         

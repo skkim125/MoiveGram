@@ -141,6 +141,7 @@ struct Videos: Hashable, Decodable {
 
 struct Video: Hashable, Decodable {
     let key: String
+    let site: String
     
     var link: String {
         return "https://www.youtube.com/watch?v=" + self.key
